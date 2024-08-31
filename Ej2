@@ -1,0 +1,56 @@
+program Pract2Ej2;
+Const
+	min= 100;
+	max= 200;
+
+Type 
+lista = ^nodo;
+nodo = record
+		n: integer;
+		sig: lista;
+	end;
+
+procedure Cargar (var l: lista);
+var v: integer; aux: lista;
+begin;
+	v:= min + random (max - min + 1);
+	if (v <> 100) then begin;
+		new (aux); 
+		aux^.n:= v;
+		aux^.sig:= l;
+		l:= aux;
+		Cargar (l);
+	end;
+end;
+
+procedure ImprimirOrdenado (l: lista);
+begin;
+	if (l <> nil) then begin;
+		writeln ('Su número fue: ', l^.n);
+		ImprimirOrdenado (l^.sig);
+	end;
+end;
+
+procedure ImprimirDesordenado (l: lista);
+begin;
+	if (l <> nil) then begin;
+		ImprimirOrdenado (l^.sig);
+		writeln ('Su número fue: ', l^.n);
+	end;
+end;
+
+var l: lista;
+
+begin;
+	randomize;
+	l:= nil;
+	Cargar (l);
+	writeln;
+	writeln ('Imprimir ordenado:');
+	writeln;
+	ImprimirOrdenado (l);
+	writeln;
+	writeln ('Imprimir desordenado: ');
+	writeln;
+	ImprimirDesordenado (l);
+end.
