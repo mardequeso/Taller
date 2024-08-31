@@ -14,7 +14,7 @@ procedure Cargar (var l: lista);
 var v: integer; aux: lista;
 begin;
 	v:= min + random (max - min + 1);
-	if (v <> 100) then begin;
+	if (v <> min) then begin;
 		new (aux); 
 		aux^.n:= v;
 		aux^.sig:= l;
@@ -34,12 +34,31 @@ end;
 procedure ImprimirDesordenado (l: lista);
 begin;
 	if (l <> nil) then begin;
-		ImprimirOrdenado (l^.sig);
+		ImprimirDesordenado (l^.sig);
 		writeln ('Su número fue: ', l^.n);
 	end;
 end;
 
+function Minimo (l: lista): integer;
+ begin;
+	if (l <> nil) then begin;
+		if (l^.n < Minimo (l^.sig)) then Minimo:= l^.n
+									else Minimo:= Minimo (l^.sig);
+	end
+	else Minimo:= max +1;
+end;
+
+function Buscar (l: lista; v: integer): boolean;
+begin
+	if (l <> nil) then begin;
+		if (l^.n = v) then Buscar:= true
+		else Buscar:= Buscar (l^.sig, v);
+	end
+	else Buscar:= false;
+end;
+
 var l: lista;
+	v: integer;
 
 begin;
 	randomize;
@@ -53,4 +72,12 @@ begin;
 	writeln ('Imprimir desordenado: ');
 	writeln;
 	ImprimirDesordenado (l);
+	writeln;
+	writeln ('El mínimo número fue: ', Minimo(l)); 
+	writeln;
+	writeln ('Ingrese valor a buscar: ');
+	read (v);
+	writeln;
+	if (Buscar (l, v)) then writeln ('verdadero')
+	else writeln ('falso');
 end.
