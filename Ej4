@@ -1,0 +1,20 @@
+program Pract2Ej4;
+procedure Pasarabinario (n:integer);
+var b: integer;
+begin
+ if (n<>0) then begin
+	b:=n MOD 2;
+	Pasarabinario (n div 2);
+	write(b);
+  end
+   else
+	write(n);
+ end;
+var
+n: integer;
+begin
+writeln('Ingrese su número');
+readln (n);
+writeln ('Su número en binario es: ');
+Pasarabinario (n);
+end.
