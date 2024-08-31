@@ -1,0 +1,69 @@
+program Pract2Ej3;
+Const DF = 20;
+	  min = 300;
+	  max = 1550;
+type vector = array [1..DF] of integer;
+
+procedure Carga (var v: vector; var fin: integer);
+var	n: integer;
+begin;
+	n:= random (max - min + 1) + min;
+	if (fin < DF) then begin;
+		fin:= fin + 1;
+		v [fin]:= n;
+		Carga (v, fin);
+	end;
+end;
+
+procedure Ordenar (var v: vector);
+var i, j, actual: integer;
+begin;
+	for i:= 2 to DF do begin;
+		actual:= v[i];
+		j:= i - 1;
+		while (j > 0) and (v [j] > actual) do begin;
+			v [j+1]:= v[j];
+			j:=j-1;
+		end;
+		v[j+1]:= actual;
+	end;
+end;
+
+Procedure BusquedaDicotomica (v: vector; ini,fin,dato:integer; var pos: integer);
+var medio: integer;
+begin
+	if (ini <= fin) then begin 
+		medio:= (ini + fin) DIV 2;
+		if (dato < v[medio]) then busquedaDicotomica (v, ini, medio -1, dato, pos)
+		else if (dato > v [medio]) then busquedaDicotomica (v, medio + 1, fin, dato, pos)			
+			 else pos:= medio
+		end
+	else
+		pos:= -1;
+end;
+
+procedure imprimir (v: vector);
+var i: integer;
+begin;
+	for i:= 1 to DF do begin;
+		writeln (v[i]);
+	end;
+end;
+
+var v: vector;
+fin, dato, pos: integer;
+begin;
+	fin:= 0;
+	Carga (v, fin);
+	writeln;
+	imprimir (v);
+	writeln;
+	Ordenar (v);
+	writeln;
+	imprimir (v);
+	writeln;
+	writeln ('Ingrese dato a buscar: ');
+	readln (dato);
+	BusquedaDicotomica (v,1,fin,dato,pos);
+	writeln (pos);
+end.
