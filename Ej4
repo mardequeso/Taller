@@ -1,11 +1,9 @@
 program Pract2Ej4;
 procedure Pasarabinario (n:integer);
-var b: integer;
 begin
  if (n<>0) then begin
-	b:=n MOD 2;
-	Pasarabinario (n div 2);
-	write(b);
+	Pasarabinario (n DIV 2);
+	write(n MOD 2);
   end
    else
 	write(n);
