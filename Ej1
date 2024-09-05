@@ -1,6 +1,6 @@
 program Pract5Ej1;
 
-Const DF= 10;
+Const DF= 300;
 
 Type
 ofi = record
@@ -11,27 +11,20 @@ ofi = record
 
 vector = array [1..DF] of Ofi;
 
-procedure ChequeoOrden (v: vector; DL: integer);
+procedure ImprimirVector (v: vector; DL: integer);
 begin;
 	if (DL > 0) then begin;
-		ChequeoOrden (v, DL -1);
+		ImprimirVector(v, DL -1);
 		writeln;
 		writeln (v[DL].cod);
-	end;
-end;
-
-procedure CargarVector (var v: vector; o:ofi; var DL: integer); begin;
-	if (DL < DF) and (o.cod <> 0) then begin
-		DL:= DL + 1;
-		v[DL]:= o;
 	end;
 end;
 
 procedure LeerOfi (var o:ofi); begin;
 	o.cod:= random (DF+1);
 	if (o.cod <> 0) then begin
-		o.DNI:= 20000 + random (50000- 20000 + 1);
-		o.valor:= 70 + random (200 - 70 +1);
+		o.DNI:=random (30000+1);
+		o.valor:=random(100)+1;
 	end;
 end;
 
@@ -40,7 +33,8 @@ var o: ofi;
 begin
 	LeerOfi (o);
 	if (DL < DF ) and (o.cod <> 0) then begin
-		CargarVector (v, o, DL);
+		DL:= DL + 1;
+		v[DL]:= o;
 		writeln;
 		writeln ('El código fue: ', v[DL].cod, ' El DNI: ', v [DL].DNI, ' El valor: ', v[DL].valor, 'k');
 		Carga (v, DL);
@@ -73,28 +67,33 @@ begin
 	else Busqueda:= 0
 end;
 
-procedure ExpensasTotal (v: vector; DL: integer; var valor: integer);
-var suma: integer;
+function CalcularExpensas(v:vector;diml:integer):integer;
 begin
-	if (DL = 0) then valor:= 0
-	else 
-		ExpensasTotal (v, DL - 1, suma);
-		valor:= suma + v[DL].valor;
-	end;
+	if(diml>0) then begin
+		writeln('EL VALOR QUE VOY A SUMAR ES: ',v[diml].valor);
+		CalcularExpensas:=v[diml].valor+CalcularExpensas(v,diml-1);
+	end
+		else CalcularExpensas:=0;
+end;
 
-var v: vector; DL, elem, valor: integer;
+var v: vector; DL, elem: integer;
 begin
 	randomize;
+	DL:=0;
+	writeln('DIML:',DL);
 	Carga (v, DL);
+	writeln('DIML:',DL);
 	writeln;
 	writeln;
 	OrdenarVector (v, DL);
+	writeln('DIML:',DL);
 	writeln;
 	writeln;
 	writeln ('Códigos ordenados: ');
 	writeln;
 	writeln;
-	ChequeoOrden (v, DL);
+	ImprimirVector(v, DL);
+	writeln('DIML:',DL);
 	writeln;
 	writeln;
 	writeln ('Ingrese código a buscar: ');
@@ -103,8 +102,9 @@ begin
 	writeln;
 	If (Busqueda (v, elem, DL, 1) <> 0) then writeln ('El DNI del propietario es: ', v[Busqueda(v, elem, DL, 1)].DNI)
 	else writeln ('No se encontró la oficina');
+	writeln('DIML:',DL);
 	writeln;
 	writeln;
-	ExpensasTotal (v, DL, valor);
-	writeln ('El monto total de las expensas es de: $', valor,'k');
+	writeln ('El monto total de las expensas es de: $',CalcularExpensas(v, DL),'k');
+	writeln('DIML:',DL);
 end.
