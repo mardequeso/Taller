@@ -1,0 +1,110 @@
+program Pract5Ej1;
+
+Const DF= 10;
+
+Type
+ofi = record
+	  cod: 0..DF;
+	  DNI: integer;
+	  valor: integer;
+	  end;
+
+vector = array [1..DF] of Ofi;
+
+procedure ChequeoOrden (v: vector; DL: integer);
+begin;
+	if (DL > 0) then begin;
+		ChequeoOrden (v, DL -1);
+		writeln;
+		writeln (v[DL].cod);
+	end;
+end;
+
+procedure CargarVector (var v: vector; o:ofi; var DL: integer); begin;
+	if (DL < DF) and (o.cod <> 0) then begin
+		DL:= DL + 1;
+		v[DL]:= o;
+	end;
+end;
+
+procedure LeerOfi (var o:ofi); begin;
+	o.cod:= random (DF+1);
+	if (o.cod <> 0) then begin
+		o.DNI:= 20000 + random (50000- 20000 + 1);
+		o.valor:= 70 + random (200 - 70 +1);
+	end;
+end;
+
+procedure Carga (var v: vector; var DL: integer); 
+var o: ofi;
+begin
+	LeerOfi (o);
+	if (DL < DF ) and (o.cod <> 0) then begin
+		CargarVector (v, o, DL);
+		writeln;
+		writeln ('El código fue: ', v[DL].cod, ' El DNI: ', v [DL].DNI, ' El valor: ', v[DL].valor, 'k');
+		Carga (v, DL);
+	end;
+end;
+
+procedure OrdenarVector (var v: vector; DL: integer);
+var i, j: integer; actual: ofi;
+begin;
+	for i:= 2 to DL do begin;
+		actual:= v[i];
+		j:= i - 1;
+		while (j <> 0) and (actual.cod < v[j].cod) do begin
+			v[j+1]:= v[j];
+			j:= j - 1;
+		end;
+		v[j+1]:= actual;
+	end;
+end;
+
+function Busqueda (v: vector; elem:integer; fin: integer; ini: integer ): integer;
+var medio: integer;
+begin
+	if (ini<= fin) then begin
+		medio:= (ini + fin) DIV 2;
+		if (elem = v[medio].cod) then Busqueda:= medio
+		else if (elem < v[medio].cod) then Busqueda:= Busqueda (v, elem, medio-1, ini)
+			 else Busqueda:= Busqueda (v, elem, fin, medio +1);
+	end
+	else Busqueda:= 0
+end;
+
+procedure ExpensasTotal (v: vector; DL: integer; var valor: integer);
+var suma: integer;
+begin
+	if (DL = 0) then valor:= 0
+	else 
+		ExpensasTotal (v, DL - 1, suma);
+		valor:= suma + v[DL].valor;
+	end;
+
+var v: vector; DL, elem, valor: integer;
+begin
+	randomize;
+	Carga (v, DL);
+	writeln;
+	writeln;
+	OrdenarVector (v, DL);
+	writeln;
+	writeln;
+	writeln ('Códigos ordenados: ');
+	writeln;
+	writeln;
+	ChequeoOrden (v, DL);
+	writeln;
+	writeln;
+	writeln ('Ingrese código a buscar: ');
+	read (elem);
+	writeln;
+	writeln;
+	If (Busqueda (v, elem, DL, 1) <> 0) then writeln ('El DNI del propietario es: ', v[Busqueda(v, elem, DL, 1)].DNI)
+	else writeln ('No se encontró la oficina');
+	writeln;
+	writeln;
+	ExpensasTotal (v, DL, valor);
+	writeln ('El monto total de las expensas es de: $', valor,'k');
+end.
