@@ -1,0 +1,153 @@
+{3. Un supermercado requiere el procesamiento de sus productos. De cada producto se conoce código, rubro (1..10), stock y precio unitario. Se pide:
+a) Generar una estructura adecuada que permita agrupar los productos por rubro. A su vez, para cada rubro, se requiere que la búsqueda
+de un producto por código sea lo más eficiente posible. El ingreso finaliza con el código de producto igual a 0.
+b) Implementar un módulo que reciba la estructura generada en a), un rubro y un código de producto y retorne si dicho código existe o no para ese rubro.
+c) Implementar un módulo que reciba la estructura generada en a), y retorne, para cada rubro, el código y stock del producto con mayor código.
+d) Implementar un módulo que reciba la estructura generada en a), dos códigos y retorne, para cada rubro, la cantidad de productos con códigos
+entre los dos valores ingresados.}
+
+Const DF = 10;
+	  maxcod = 1000;
+	  maxprecio = 3000;
+	  maxstock=3000;
+	  corte = 0;
+Type
+prod = record
+	   cod: integer;
+	   stock: integer;
+	   precio: real;
+	   end;
+
+arbol = ^nodo;
+nodo = record
+	   p:prod;
+	   HI: arbol;
+	   HD: arbol;
+	   end;
+	   
+vector1 = array [1..DF] of arbol;
+
+producto = record
+	   cod: integer;
+	   stock: integer;
+	   end;
+	   
+vector2 = array [1..DF] of producto;
+
+vector3 = array [1..DF] of integer;
+
+procedure InformarArbol (a: arbol; rubro: integer);
+begin;
+	if (a <> nil) then begin
+		writeln;
+		InformarArbol (a^.HI, rubro);
+		writeln ('El codigo es: ',a^.p.cod,', el stock: ',a^.p.stock,' y el precio: ',a^.p.precio:1:2,'. Pertenece al rubro: ', rubro);
+		InformarArbol (a^.HD, rubro);
+	end;
+end;
+
+procedure Generarprod (var p:prod);
+begin;
+	p.cod:= random (maxcod);
+	if (p.cod <> corte) then begin;
+		p.stock:= random (maxstock);
+		p.precio:= random (maxprecio) + 0.1*random(10);
+	end;
+end;
+
+procedure GenerarArbol (var a: arbol; p:prod);
+begin;
+	if (a = nil) then begin
+		new (a);
+		a^.p:= p;
+		a^.HI:= nil;
+		a^.HD:= nil;
+	end
+		else if (p.cod <= a^.p.cod) then GenerarArbol (a^.HI, p)
+		 else GenerarArbol (a^.HD, p);
+end;
+
+
+procedure GenerarVector (var v: vector1);
+var p: prod;
+begin
+	Generarprod (p);
+	if (p.cod <> 0) then begin
+		GenerarArbol (v[random (DF) + 1], p);
+		GenerarVector (v);
+	end;
+end;
+
+function Busqueda (a: arbol; cod: integer): boolean;
+begin;
+	if (a = nil) then Busqueda:= false
+	else if (a^.p.cod = cod) then Busqueda:= true
+		 else if (a^.p.cod < cod) then Busqueda:= Busqueda(a^.HD, cod)
+			  else Busqueda:= Busqueda (a^.HI, cod);
+end;
+
+procedure Recorrer (a: arbol; var p: producto);
+begin
+	if (a <> nil) then begin
+		if (a^.HD = nil) then begin
+			p.cod:= a^.p.cod;
+			p.stock:= a^.p.stock;
+		end
+		else Recorrer (a^.HD, p);
+	end;
+end;
+
+function Contador (a: arbol; min, max: integer): integer;
+begin
+	if (a = nil) then Contador:= 0
+	else if (max > a^.p.cod) then begin
+			if (min < a^.p.cod) then Contador:= 1 + Contador (a^.HD, min, max) + Contador (a^.HI, min, max)
+			else  Contador:= Contador (a^.HD, min, max);
+		 end	
+		 else Contador:= Contador (a^.HI, min, max);
+end;
+procedure CargarVContador (v1: vector1; v3: vector3; min, max: integer); 	
+var i: integer;
+begin
+	for i:= 1 to DF do begin
+		v3[i]:= Contador (v1[i], min, max);
+		writeln;
+		writeln ('Para el rubro numero: ',i, ' la cantidad de productos entre los codigos ',min, ' y ',max, ' fue de: ',v3[i]);
+	end;
+end;
+
+var v1: vector1; v2: vector2; cod1, cod2, i: integer; rubro: 1..DF; v3: vector3;
+begin
+	randomize;
+	writeln;
+	writeln;
+	GenerarVector (v1);
+	for i:= 1 to DF do begin;
+		writeln;
+		InformarArbol (v1[i], i);
+	end;
+	writeln;
+	writeln ('Ingrese rubro (entre 1 y 10) en el que buscar: ');
+	read (rubro);
+	write (' y codigo a buscar: ');
+	read(cod1);
+	writeln;
+	if (Busqueda (v1[rubro], cod1)) then writeln ('El codigo existe para el rubro')
+	else writeln ('El codigo no existe para el rubro');
+	writeln;
+	writeln;
+	for i:= 1 to DF do begin
+		Recorrer (v1[i], v2[i]);
+		writeln;
+		writeln ('El mayor codigo del rubro ',i, ' fue el: ', v2[i].cod, ' con un stock de: ', v2[i].stock);
+		writeln;
+	end;
+	writeln;
+	writeln('Ingrese codigo minimo: ');
+	read (cod1);
+	write (' y codigo maximo: ');
+	read (cod2);
+	writeln;
+	writeln;
+	CargarVContador (v1, v3, cod1, cod2);
+end.
