@@ -1,0 +1,167 @@
+{Una clínica necesita un sistema para el procesamiento de las atenciones realizadas a los pacientes.
+a) Implementar un módulo que lea información de las atenciones. De cada atención se lee: DNI del paciente, número de mes, y código de diagnóstico (1 a 15). La lectura 
+finaliza con el mes 0. Se sugiere utilizar el módulo leerAtencion (). El módulo debe retornar dos estructuras de datos:
+1. Una estructura de datos eficiente para la búsqueda por DNI del paciente. Para cada DNI debe almacenarse la cantidad total de atenciones recibidas.
+ii. Otra estructura de datos con la cantidad de atenciones realizadas para cada diagnóstico.
+b) Implementar un módulo que reciba la estructura generada en a) I., dos números de DNI y un valor entero x. Este módulo debe retornar la cantidad de pacientes con más 
+de x atenciones cuyos DNI están entre los 2 números de DNI recibidos.
+c) Implementar un módulo recursivo que reciba la estructura generada en a) ii, y retorne la cantidad de diagnósticos para los cuales la cantidad de atenciones fue cero.
+}
+
+program ParcialAtenciones;
+
+Const
+corte = 0;
+DF = 15;
+Type 
+atencion = record
+			mes: 0..12;
+			cod: 1..DF;
+			end;
+
+lista = ^nodol;
+nodol = record
+		dato: atencion;
+		sig: lista;
+		end;
+
+atenciones = record
+			DNI: integer;
+			l: lista;
+			end;
+
+arbol = ^nodoa;
+nodoa = record
+		at: atenciones;
+		HD: arbol;
+		HI: arbol;
+		end;
+
+vector= array [1..DF] of integer;
+
+procedure LeerAtencion (var a: atencion);
+begin
+	a.mes:= random (13);
+	if (a.mes <> 0) then a.cod:= random (DF+1);
+end;
+
+procedure CargarLista (var l: lista; at: atencion);
+begin
+	if (l = nil) then  begin
+		new (l);
+		l^.dato:= at;
+		l^.sig:= nil;
+	end
+	else CargarLista (l^.sig, at);
+end;
+
+procedure CargarArbol (var a: arbol; at: atencion; DNI: integer);
+begin
+	if (a=nil) then begin
+		new (a);
+		a^.at.DNI:= DNI;
+		a^.at.l:= nil;
+		CargarLista (a^.at.l, at);
+		a^.HD:= nil;
+		a^.HI:= nil;
+	end
+	else if (DNI = a^.at.DNI) then CargarLista (a^.at.l, at)
+		 else if(DNI> a^.at.DNI) then CargarArbol (a^.HD, at, DNI)
+			  else CargarArbol (a^.HI, at, DNI);
+end;
+
+procedure Cargardatos (var a: arbol; var v: vector);
+var at: atencion;
+begin
+	LeerAtencion (at);
+	if (at.mes <> 0) then begin
+		CargarArbol (a, at, random (3000)+1);
+		v[at.mes]:= v[at.mes]+1;
+		Cargardatos(a,v);
+	end;
+end;
+
+function MayorV (l: lista; v: integer): boolean;
+begin
+	if (v > 0) then begin
+		if (l <> nil) then MayorV:= MayorV (l^.sig, v-1)
+		else MayorV:= false;
+	end
+	else MayorV:= true
+end;
+
+function EntreDNI (a: arbol; min, max, valor: integer): integer;
+begin
+	if (a = nil) then EntreDNI:= 0
+	else if (a^.at.DNI > min) then begin
+			if (a^.at.DNI < max) then begin
+				if (MayorV (a^.at.l, valor)) then EntreDNI:= 1 + EntreDNI (a^.HD, min, max, valor) + EntreDNI (a^.HI, min, max, valor)
+				else EntreDNI:= EntreDNI (a^.HD, min, max, valor) + EntreDNI (a^.HI, min, max, valor);
+			end
+			else EntreDNI:= EntreDNI (a^.HI, min, max, valor);
+		end
+		else EntreDNI:= EntreDNI (a^.HD, min, max, valor)
+end;
+
+Function Diagnosticos0 (v: vector; Dl: integer): integer;
+begin
+	if (DL = 0) then Diagnosticos0:= 0
+	else if (v[DL]= 0) then Diagnosticos0:= 1 + Diagnosticos0 (v, Dl-1)
+		 else Diagnosticos0:= Diagnosticos0 (v, Dl-1);
+end;
+
+procedure ImprimirLista(l: lista);
+begin
+	if (l<>nil) then begin
+		writeln;
+		writeln ('El cod de diagnostico es ', l^.dato.cod,' y el mes ', l^.dato.mes);
+		ImprimirLista (l^.sig);
+	end;
+end;
+
+procedure ImprimirArbol (a: arbol);
+begin
+	if (a<>nil) then begin
+		ImprimirArbol (a^.HI);
+		writeln;
+		writeln ('El DNI es ', a^.at.DNI, '. Imprimir lista');
+		ImprimirLista (a^.at.l);
+		ImprimirArbol (a^.HD);
+	end;
+end;
+
+procedure ImprimirV (v: vector);
+var i:integer;
+begin
+	for i:= 1 to DF do begin
+		writeln;
+		writeln ('El diag n ', i, ' tiene ', v[i]);
+	end;
+end;
+
+var a: arbol; v: vector; DNI1, DNI2, valor, pacientes, diag0, i: integer;
+begin
+	randomize;
+	for i:= 1 to DF do v[i]:= 0;
+	a:= nil;
+	Cargardatos (a, v);
+	writeln;
+	writeln ('Imprimir Arbol');
+	ImprimirArbol (a);
+	writeln;
+	ImprimirV (v);
+	writeln;
+	writeln ('Ingrese DNI min ');
+	read(DNI1);
+	write ('Ingrese DNI max ');
+	read(DNI2);
+	write ('Ingrese valor minimo de atenciones ');
+	read (valor);
+	pacientes:= EntreDNI (a, DNI1, DNI2, valor);
+	writeln;
+	writeln ('El num de pacientes fue de ', pacientes);
+	writeln;
+	diag0:= Diagnosticos0 (v, DF);
+	writeln ('La cant de diagnosticos en 0 fue de ', diag0);
+	writeln;
+end.
