@@ -1,0 +1,140 @@
+{Un comercio necesita el procesamiento de las compras realizadas por sus clientes durante el mes de julio de 2022. De cada compra se conoce código del cliente, día, cantidad de productos y monto pagado.
+a) Implementar un módulo que lea compras, genere y retorne una estructura adecuada para la búsqueda por código del cliente, donde para cada código de cliente se almacenan juntas todas sus compras (día, cantidad de productos y monto) que realizó. La lectura finaliza con cantidad de productos 0. Se sugiere utilizar el módulo leerRegistro ().
+b) Implementar un módulo que reciba la estructura generada en a) y un código de cliente y retorne todas las compras de dicho cliente.
+c) Realizar un módulo recursivo que reciba la estructura que retorna el inciso b) y retorne el monto de la compra con mayor cantidad de productos.
+NOTA: Implementar el programa principal, que invoque a los incisos a, by c.}
+program Compras;
+
+Const corte = 0;
+maxcant=15;
+maxcod=5;
+
+Type 
+compra = record
+		dia: 1..31;
+		cant: integer;
+		monto: real;
+		end;
+lista=^nodol;
+nodol= record
+		d: compra;
+		sig:lista;
+		end;
+comp = record
+		cod:integer;
+		l:lista;
+		end;
+arbol=^nodoa;
+nodoa = record
+		c: comp;
+		HD:arbol;
+		HI:arbol;
+		end;
+
+procedure LeerC (var c: compra);
+begin
+	c.cant:= random (maxcant);
+	if (c.cant<>corte) then begin
+		c.dia:= random (31)+1;
+		c.monto:= random (30000);
+	end;
+end;
+
+procedure CargaLista (var l: lista; c: compra);
+begin
+	if (l = nil) then begin
+		new (l);
+		l^.d:= c;
+		l^.sig:= nil;
+	end
+	else CargaLista (l^.sig, c);
+end;
+
+procedure CargaArbol (var a:arbol; c: compra; cod: integer);
+begin
+	if (a= nil) then begin
+		new (a);
+		a^.c.cod:= cod;
+		a^.c.l:= nil;
+		CargaLista (a^.c.l, c);
+		a^.HD:= nil;
+		a^.HI:= nil;
+	end
+	else if (a^.c.cod = cod) then CargaLista (a^.c.l, c)
+		 else if (a^.c.cod < cod) then CargaArbol (a^.HD, c, cod)
+			  else CargaArbol (a^.HI,c, cod);
+end;
+
+
+procedure CrearArbol (var a: arbol);
+var c:compra;
+begin
+	LeerC(c);
+	if (c.cant<>corte) then begin
+		CargaArbol (a, c, random (maxcod)+1);
+		CrearArbol (a);
+	end;
+end;
+
+procedure RetornarCompras (var l: lista; a:arbol; cod: integer);
+begin
+	if (a<> nil) then begin
+		if (a^.c.cod = cod) then l:= a^.c.l
+		else if (a^.c.cod < cod) then RetornarCompras (l, a^.HD,cod)
+			 else RetornarCompras (l,a^.HI,cod);
+	end;
+end;
+
+procedure Mayorcant (l: lista; var maxc: integer; var maxm: real);
+begin
+	if (l<>nil) then begin 
+		Mayorcant (l^.sig, maxc, maxm);
+		if (l^.d.cant > maxc) then begin
+			maxc:= l^.d.cant;
+			maxm:= l^.d.monto;
+		end;
+	end
+	else begin
+		maxc:= 0;
+		maxm:= 0;
+	end;
+end;
+procedure ImprimirLista (l:lista);
+begin
+	if (l<> nil) then begin
+		writeln;
+		writeln ('La cant fue ', l^.d.cant,', el dia ',l^.d.dia, ' y el monto ', l^.d.monto:1:2);
+		ImprimirLista (l^.sig);
+	end;
+end;
+
+procedure ImprimirArbol (a: arbol);
+begin
+	if (a<>nil)	then begin
+		ImprimirArbol (a^.HI);
+		writeln;
+		writeln ('El cod de cliente es ', a^.c.cod, ' Imprimir lista');
+		ImprimirLista (a^.c.l);
+		ImprimirArbol (a^.HD);
+	end;
+end;
+
+var a: arbol; l: lista; cod, maxc: integer; maxm: real;
+begin
+	a:= nil;
+	l:= nil;
+	CrearArbol (a);
+	writeln;
+	writeln('Imprimir arbol');
+	ImprimirArbol (a);
+	writeln;
+	writeln ('Ingrese cod a buscar ');
+	read (cod);
+	RetornarCompras (l, a, cod);
+	writeln;
+	writeln('Imprimir Lista');
+	ImprimirLista (l);
+	writeln;
+	Mayorcant (l, maxc, maxm);
+	writeln ('El monto de la mayor cant (',maxc,') fue de ',maxm:1:2);
+end.
