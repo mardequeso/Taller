@@ -159,6 +159,7 @@ end;
 
 var a: arbol; lcod: listacod; DNI1, DNI2, anio, cantDNI, cantEntreDNI: integer;
 begin
+	a:= nil;
 	CargarArbol (a);
 	writeln;
 	ImprimirArbol (a);
