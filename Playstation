@@ -1,0 +1,169 @@
+{PlayStation Store requiere procesar las compras realizadas por sus clientes durante el año 2022.
+a) Implementar un módulo que lea compras de videojuegos. De cada compra se lee código del videojuego, código de cliente, día y mes. La lectura finaliza con el código de
+cliente 0. Se sugiere utilizar el módulo leerCompra(). Se deben retornar 2 estructuras de datos:
+i. Una estructura eficiente para la búsqueda por código de cliente.
+ii. Otra estructura que almacena la cantidad de compras realizadas en cada mes.
+b) Implementar un módulo que reciba la estructura generada en a) i, un código de cliente, retorne todas las compras que realizó dicho cliente.
+c) Implementar un módulo que reciba la estructura generada en a) ii y retorne la misma estructura ordenada por cantidad de mayor a menor.
+NOTA: Implementar el programa principal, que invoque a los incisos a, b y c.
+En caso de ser necesario, adjuntamos algunas porciones de código que puede utilizar en su programa.}
+
+program Parcial_PS;
+
+Const corte= 0;
+maxcods = 30000;
+DF = 12;
+Type
+compra = record
+	     codv: integer;
+	     codc: integer;
+	     dia: 1..31;
+	     mes: 1.. DF;
+	     end;
+arbol = ^nodoa;
+nodoa = record
+		c: compra;
+		HD: arbol;
+		HI: arbol;
+		end;
+
+lista=^nodol;
+nodol = record
+		c:compra;
+		sig:lista;
+		end;
+comprav = record
+			mes: integer;
+			cant: integer;
+			end;
+vector = array [1..DF] of comprav;
+
+procedure GenerarInfo (var c: compra);
+begin
+	c.codc:= random (maxcods);
+	if (c.codc <> corte) then begin
+		c.codv:= random (maxcods);
+		c.dia:= random (31) + 1;
+		c.mes:= random (12) + 1;
+	end;
+end;
+
+procedure GenerarArbol (var a: arbol; c: compra);
+begin
+	if (a = nil) then begin
+		new (a);
+		a^.c:= c;
+		a^.HD:= nil;
+		a^.HI:= nil;
+	end
+	else if (a^.c.codc < c.codc) then GenerarArbol (a^.HD, c)
+		 else GenerarArbol (a^.HI,c);
+end;
+
+
+procedure CargarAyV (var a: arbol; var v: vector);
+var c:compra;
+begin
+	GenerarInfo (c);
+	if (c.codc <> corte) then begin
+		GenerarArbol (a, c);
+		v[c.mes].cant:= v[c.mes].cant+1;
+		CargarAyV (a,v);
+	end;
+end;
+
+procedure IniciarV (var v: vector);
+var i: integer;
+begin
+	for i:= 1 to DF do begin
+		v[i].mes:= i;
+		v[i].cant:= 0;
+	end;
+end;
+
+procedure CargarLista (var l: lista; c: compra);
+begin
+	if (l = nil) then begin
+		new (l);
+		l^.c:= c;
+		l^.sig:= nil;
+	end
+	else CargarLista(l^.sig, c);
+end;
+
+procedure RetornarCompras (var l: lista; a: arbol; cod: integer);
+begin
+	 if (a<> nil) then begin
+		if (a^.c.codc < cod) then RetornarCompras (l,a^.HD, cod)
+		else if (a^.c.codc = cod) then CargarLista (l, a^.c);
+			 RetornarCompras (l, a^.HI, cod);
+	end;
+end;
+
+procedure OrdenarV (var v: vector);
+var i, j: integer; actual: comprav;
+begin
+	for i:= 2 to DF do begin
+		actual:= v[i];
+		j:= i-1;
+		while (j > 0) and (actual.cant < v[j].cant) do begin
+			v [j+1]:= v[j];
+			j:= j-1;
+		end;
+		v[j+1]:= actual;
+	end;
+end;
+
+procedure ImprimirA (a: arbol);
+begin
+	if (a<> nil) then begin
+		ImprimirA (a^.HI);
+		writeln;
+		writeln ('El cod de cliente es ',a^.c.codc,', el cod de videojuego ',a^.c.codv,', el dia ', a^.c.dia,' y el mes ',a^.c.mes);
+		writeln;
+		ImprimirA (a^.HD);
+	end;
+end;
+
+procedure ImprimirV (v: vector);
+var i: integer;
+begin
+	for i:= 1 to DF do begin;
+		writeln ('El mes es ',v[i].mes,' y la cant ',v[i].cant);
+		writeln;
+	end;
+end;
+
+procedure ImprimirLista (l: lista);
+begin
+	if (l<>nil) then begin
+		writeln;
+		writeln ('El cod de cliente es ', l^.c.codc, ', el cod de videojuego ', l^.c.codv,', el dia ',l^.c.dia,' y el mes ',l^.c.mes);
+		ImprimirLista (l^.sig);
+	end;
+end;
+
+var a: arbol; v: vector; l: lista; cod: integer;
+begin
+	randomize;
+	IniciarV (v);
+	a:= nil;
+	l:= nil;
+	CargarAyV (a,v);
+	writeln;
+	writeln ('Imprimir Arbol');
+	ImprimirA (a);
+	writeln ('Imprimir vector');
+	ImprimirV (v);
+	writeln;
+	writeln ('Ingrese cod a buscar');
+	read (cod);
+	RetornarCompras (l, a, cod);
+	writeln;
+	writeln ('Imprimir lista');
+	ImprimirLista(l);
+	OrdenarV (v);
+	writeln;
+	writeln ('Imprimir vector ordenado');
+	ImprimirV (v);
+end.
