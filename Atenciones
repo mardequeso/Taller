@@ -14,7 +14,7 @@ corte = 0;
 DF = 15;
 Type 
 atencion = record
-			mes: 0..12;
+			mes: 1..12;
 			cod: 1..DF;
 			DNI: integer
 			end;
