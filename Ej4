@@ -1,0 +1,186 @@
+program Pract5Ej4;
+
+Const amin = 2010;
+	  amax = 2024;
+	  maxcod = 3000;
+	  corte = 0;
+Type
+reclamo = record 
+	      cod: integer;
+	      anio: amin..amax;
+	      tipo: string [40];
+	      end;
+lista = ^nodoL;
+nodoL = record
+		r: reclamo;
+		sig: lista;
+		end;
+
+rec = record
+	  DNI: integer;
+	  cant: integer;
+	  l: lista;
+	  end;
+	  
+arbol = ^nodoA;
+nodoA = record
+	   dato: rec;
+	   HD: arbol;
+	   HI: arbol;
+	   end;
+	   
+listacod = ^nodocod;
+nodocod = record
+		  ele:integer;
+		  sig: listacod;
+		  end;
+
+procedure ImprimirLista (l: lista); begin
+	if (l <> nil) then begin;
+		writeln ('Codigo: ', l^.r.cod,' Anio: ', l^.r.anio, ' Tipo: ', l^.r.tipo);
+		ImprimirLista (l^.sig);
+	end;
+end;
+
+procedure ImprimirArbol (a: arbol);
+begin
+	if (a <> nil) then begin
+		ImprimirArbol (a^.HI);
+		writeln ('El DNI es: ', a^.dato.DNI, ', la cant de reclamos fue de ', a^.dato.cant, ' y la lista es: ');
+		ImprimirLista (a^.dato.l);
+		ImprimirArbol (a^.HD);
+	end;
+end;
+
+procedure ImprimirListaCod (l: listacod);
+begin
+	if (l <> nil) then begin
+		writeln ('El codigo fue ', l^.ele);
+		ImprimirListaCod (l^.sig);
+	end;
+end;
+
+procedure GenerarReclamo (var r: reclamo);
+var v:array [0..4] of string= ('Roturas', 'Goteras', 'Corte de Luz', 'Corte de Agua', 'Ruidos Fuertes');  
+begin
+	r.cod:= random (maxcod);
+	if (r.cod <> corte) then begin
+		r.anio:= random (amax-amin+1)+amin;
+		r.tipo:= v[random (5)];
+	end;
+end;
+
+procedure AgregarLista (var l: lista; r: reclamo);
+var aux: lista;
+begin
+	new (aux);
+	aux^.r:= r;
+	aux^.sig:= l;
+	l:= aux;
+end;
+
+procedure GenerarArbol (var a: arbol; r: reclamo; DNI: integer);
+begin
+	if (a = nil) then begin
+		new (a);
+		a^.dato.DNI:= DNI;
+		a^.dato.cant:= 1;
+		a^.dato.l:= nil;
+		AgregarLista (a^.dato.l, r);
+		a^.HD:= nil;
+		a^.HI:= nil;
+	end
+	else if (a^.dato.DNI = DNI) then begin
+			 a^.dato.cant:= a^.dato.cant+1;
+			 AgregarLista (a^.dato.l, r);
+		 end
+		 else if (a^.dato.DNI < DNI) then GenerarArbol (a^.HD, r, DNI)
+			  else GenerarArbol (a^.HI, r, DNI);
+end;
+
+procedure CargarArbol (var a: arbol);
+var r: reclamo;
+begin
+	GenerarReclamo (r);
+	if (r.cod <> corte) then begin
+		GenerarArbol (a, r, random (30000));
+		CargarArbol (a);
+	end;
+end;
+
+function RegresarCant (a: arbol; DNI: integer): integer;
+begin
+	if (a = nil) then RegresarCant:= 0
+	else if (a^.dato.DNI = DNI) then begin
+			 writeln ('El DNI que entró a RegresarCant fue: ', a^.dato.DNI);
+			 RegresarCant:= a^.dato.cant;
+		 end
+		 else if (a^.dato.DNI < DNI) then RegresarCant:= RegresarCant (a^.HD, DNI)
+			  else RegresarCant:= RegresarCant (a^.HI, DNI);
+end;
+
+function BuscarEntreDni(a:arbol; min, max:integer):integer;
+begin
+	if (a = nil) then BuscarEntreDni:= 0
+	else if (a^.dato.DNI < max) then begin
+			 if (a^.dato.DNI > min) then begin
+				writeln ('El DNI que entró a BuscarEntreDNI fue ', a^.dato.DNI,' y la cant fue ', a^.dato.cant);
+				BuscarEntreDni:= a^.dato.cant + BuscarEntreDni (a^.HD, min, max) + BuscarEntreDni (a^.HI, min, max);
+			 end
+			 else BuscarEntreDni:= BuscarEntreDni (a^.HD, min, max);
+		 end
+	     else BuscarEntreDni:= BuscarEntreDni (a^.HI, min, max);
+end;
+
+procedure RecorrerLista (var l: listacod; al: lista; anio: integer);
+var aux: listacod;
+begin
+	if (al <> nil) then begin
+		if (al^.r.anio = anio) then begin
+			writeln;
+			writeln ('El anio que entró a RecorrerLista fue ', al^.r.anio);
+			new (aux);
+			aux^.ele:= al^.r.cod;
+			aux^.sig:= l;
+			l:= aux;
+		end;
+	end
+	else RecorrerLista(l, al^.sig, anio);
+end;	
+
+procedure GeneraraListaCod (var l: listacod; a: arbol; anio: integer);
+begin
+	if (a <> nil) then begin
+		RecorrerLista (l, a^.dato.l, anio);
+		GeneraraListaCod (l, a^.HI, anio);
+		GeneraraListaCod (l, a^.HD, anio);
+	end;
+end;
+
+var a: arbol; lcod: listacod; DNI1, DNI2, anio, cantDNI, cantEntreDNI: integer;
+begin
+	CargarArbol (a);
+	writeln;
+	ImprimirArbol (a);
+	writeln;
+	writeln ('Ingrese DNI a buscar: ');
+	read (DNI1);
+	cantDNI:= RegresarCant (a, DNI1);
+	writeln;
+	writeln ('La cantidad total de reclamos que realizó el DNI ', DNI1,' fue de: ', cantDNI);
+	writeln;
+	writeln ('Ingrese el DNI mínimo: ');
+	read (DNI1);
+	write ('Ingrese el DNI máximo: ');
+	read(DNI2);
+	cantEntreDNI:= BuscarEntreDni (a, DNI1, DNI2);
+	writeln;
+	writeln ('La cant de DNIs entre ', DNI1, ' y ', DNI2, ' fue de: ',cantEntreDNI);
+	writeln;
+	writeln ('Ingrese anio a buscar: ');
+	read (anio);
+	lcod:= nil;
+	GeneraraListaCod (lcod, a, anio);
+	writeln;
+	ImprimirListaCod (lcod);
+end.
