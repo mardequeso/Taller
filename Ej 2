@@ -1,0 +1,23 @@
+
+package tema1;
+
+import PaqueteLectura.Lector;
+
+public class Ej02Jugadores {
+
+  
+    public static void main(String[] args) {
+        int cant = 0, i, DF = 15;
+        double prom = 0;
+        double[]altJugadores = new double[DF];
+        for (i = 0; i < DF; i++) {
+            System.out.println ("Ingrese altura de un nuevo jugador");
+            altJugadores[i] = Lector.leerDouble();
+            prom = prom +  altJugadores[i];
+        }
+        prom = prom / DF;
+        System.out.println ("La altura promedio fue de " + prom);
+        for (i = 0; i < DF; i++) if (prom < altJugadores[i]) cant++;
+        System.out.println("La cantidad de jugadores que superan el promedio es " + cant);
+    }
+}
