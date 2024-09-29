@@ -1,0 +1,71 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema1;
+
+import PaqueteLectura.GeneradorAleatorio;
+import PaqueteLectura.Lector;
+ 
+public class Ej03Matrices {
+
+    public static void main(String[] args) {
+	int i, j, suma, valor, DF = 5;
+        int [][] matriz = new int[DF][DF];
+        int [] vector = new int [DF];
+        GeneradorAleatorio.iniciar();
+        for (i = 0; i < DF; i++){
+            for (j = 0; j < DF; j++){
+                matriz [i][j] = GeneradorAleatorio.generarInt(31);
+            }
+        }
+        for (i = 0; i < DF; i++){
+            System.out.println ("Fila n " + i);
+            for (j = 0; j < DF; j++){
+                System.out.println ("El contenido de la columna n " + j + " es " + matriz [i][j]);
+            }
+        }
+        i = 1;
+        suma = 0;
+        for (j = 0; j < DF; j++){
+            suma += matriz [i][j];
+        }
+        System.out.println ("La suma de los elementos de la fila " + i + " fue de " + suma);
+        for (j = 0; j < DF; j++) {
+            vector [j] = 0;
+        }
+        for (j = 0; j < DF; j++){
+            for (i = 0; i < DF; i++){
+                vector[j] += matriz [i][j];
+            }
+        }
+        for (j = 0; j < DF; j++){
+            System.out.println ("la suma de los elementos de la columna " + j + " fue de " + vector [j]);
+        }
+        System.out.println ("Ingrese valor a buscar");
+        valor = Lector.leerInt();
+        i = 0;
+        boolean esta = false;
+        while (i < DF && esta == false){
+            j = 0;
+            while ( j < DF && esta == false) {
+                if (matriz [i][j] == valor){
+                    esta = true;
+                }
+                else {
+                    j++;
+                }
+            }
+            if (esta == false) {
+                i++; 
+            }    
+        }
+        if (esta) {
+            System.out.println("El valor se encuentra en la fila " + i + ", columna " + j);
+        }
+        else {
+            System.out.println ("No se encontró el elemento");
+        }
+    }
+}
