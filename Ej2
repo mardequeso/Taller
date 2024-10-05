@@ -11,29 +11,33 @@ import PaqueteLectura.GeneradorAleatorio;
  *
  * @author alumnos
  */
-public class Ej02 {
+public class PractEj2 {
     public static void main(String[] args) {
-        int i, cant = 0, menorDNI = 101, menorP, edad = GeneradorAleatorio.generarInt(100), DimL = -1, DimF = 15;
-        Persona[] personas= new Persona[DimF];
+        GeneradorAleatorio.iniciar();
+        int i, cant = 0, menorDNI = 101, menorP = -1, edad = GeneradorAleatorio.generarInt(100), DimL = 0, DimF = 15;
+        Persona[] v= new Persona[DimF];
+        System.out.println ("Edad generada " + edad);
         while (DimL < DimF && edad != 0) {
-            DimL++;
-            personas [DimL].setEdad(edad);
-            personas[DimL].setDNI(GeneradorAleatorio.generarInt(100));
-            personas [DimL].setNombre(GeneradorAleatorio.generarString(20));
+            v [DimL] = new Persona (GeneradorAleatorio.generarString(5), GeneradorAleatorio.generarInt(100), edad);
+            System.out.println("Posicion " + DimL + " "+ v[DimL].toString());
             edad = GeneradorAleatorio.generarInt(100);
-            System.out.println("Posicion " + DimL + personas[DimL].toString());
+            System.out.println ("Edad generada " + edad);
+            DimL++;
         }
         for (i = 0; i < DimL; i++){
-            if (personas [i].getDNI() > 65) {
+            if (v[i].getEdad()> 65) {
+                System.out.println ("Entré " + v[i].toString());
                 cant++;
             }
-            if (personas[i].getDNI() < menorDNI){
-                menorDNI = personas[i].getDNI();
+            if (v[i].getDNI() < menorDNI){
+                menorDNI = v[i].getDNI();
                 menorP = i;
             }
         }
-        System.out.println("La cant de personas mayores de 65 fue" + cant);
-        System.out.println("Persona con menor DNI: " + personas[menorP].toString());
+        System.out.println("La cant de personas mayores de 65 fue " + cant);
+        if (menorP != -1){
+            System.out.println("Persona con menor DNI: " + v[menorP].toString());
+        }
     }
 }
 //2- Utilizando la clase Persona. Realice un programa que almacene en un vector a lo sumo 15 personas. La información
