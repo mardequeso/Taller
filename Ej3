@@ -1,0 +1,51 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema2;
+
+import PaqueteLectura.Lector;
+
+/**
+ *
+ * @author Martina
+ */
+public class PractEj3 {
+    public static void main (String[] args) {
+        int dia = 5, turno = 8, i, j, dlD = 0, dlT;
+        String CORTE = "ZZZ", nombre;      
+        int[] v = new int [dia];
+        Persona[][] matriz = new Persona [dia][turno];
+        System.out.println("Ingrese nombre ");
+        nombre = Lector.leerString();
+        for (i = 0; i < dia; i++){
+            v[i] = 0;
+        }
+        while (dlD < dia && !nombre.equals(CORTE)) {
+            dlT = 0;
+            while (dlT < turno && !nombre.equals(CORTE)){
+                v[dlD]++;
+                System.out.println ("Ingrese DNI y edad ");
+                matriz[dlD][dlT] = new Persona (nombre, Lector.leerInt(),Lector.leerInt());
+                System.out.println("Ingrese nombre ");
+                nombre = Lector.leerString();
+                dlT++;
+            }
+            System.out.println ("dlT " + dlT);
+            dlD++;
+        }
+        for (i = 0; i < dlD; i++) {
+            System.out.println ("Dia " + (i + 1));
+            for (j = 0; j < v[i]; j++) {
+                System.out.println ("Para el turno " + (j + 1) + " la persona que se va a entrevistar es " + matriz[i][j].getNombre());
+            }
+        }
+    }
+}
+//3- Se realizará un casting para un programa de TV. El casting durará a lo sumo 5 días y en cada día se entrevistarán a 8 personas en distinto turno.
+//a) Simular el proceso de inscripción de personas al casting. A cada persona se le pide nombre, DNI y edad y se la debe asignar en un día y turno de 
+//la siguiente manera: las personas primero completan el primer día en turnos sucesivos, luego el segundo día y así siguiendo. La inscripción finaliza 
+//al llegar una persona con nombre “ZZZ” o al cubrirse los 40 cupos de casting. Una vez finalizada la inscripción:
+//b) Informar para cada día y turno asignado, el nombre de la persona a entrevistar.
+//NOTA: utilizar la clase Persona. Pensar en la estructura de datos a utilizar. Para comparar Strings use el método equals.
