@@ -13,7 +13,7 @@ import PaqueteLectura.Lector;
  */
 public class PractEj3 {
     public static void main (String[] args) {
-        int dia = 5, turno = 8, i, j, dlD = 0, dlT;
+        int dia = 5, turno = 8, i, j, dlD = 0;
         String CORTE = "ZZZ", nombre;      
         int[] v = new int [dia];
         Persona[][] matriz = new Persona [dia][turno];
@@ -23,16 +23,14 @@ public class PractEj3 {
             v[i] = 0;
         }
         while (dlD < dia && !nombre.equals(CORTE)) {
-            dlT = 0;
-            while (dlT < turno && !nombre.equals(CORTE)){
-                v[dlD]++;
+            while (v[dlD] < turno && !nombre.equals(CORTE)){
                 System.out.println ("Ingrese DNI y edad ");
-                matriz[dlD][dlT] = new Persona (nombre, Lector.leerInt(),Lector.leerInt());
+                matriz[dlD][v[dlD]] = new Persona (nombre, Lector.leerInt(),Lector.leerInt());
                 System.out.println("Ingrese nombre ");
                 nombre = Lector.leerString();
-                dlT++;
+                v[dlD]++;
             }
-            System.out.println ("dlT " + dlT);
+            System.out.println ("dlT " + v[dlD]);
             dlD++;
         }
         for (i = 0; i < dlD; i++) {
