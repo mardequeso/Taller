@@ -1,0 +1,64 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema3;
+
+/**
+ *
+ * @author Martina
+ */
+public class Estante {
+    private int DF, DL = 0;
+    private Libro[] estante;
+
+    public Estante() {
+        
+    }
+    
+    public Estante (int DF){
+        this.DF = DF;
+        estante = new Libro[DF];
+    }
+    
+    public boolean estaLleno (){
+        return (DL == DF);
+    }
+    
+    public void agregarLibro (Libro libro){
+        if (!estaLleno()){
+            estante [DL] = libro;
+            DL++;
+        }
+        else {
+            System.out.println ("El estante está lleno");
+        }
+    }
+    
+    public Libro buscarTitulo (String titulo){
+        int i = 0;
+        while (i < DL && !(estante[i].getTitulo().equals(titulo))){
+            i++;
+        }
+        if (i < DL){
+            return estante[i];
+        }
+        else {
+            return null;
+        }
+    }
+     
+    public int getCantLibros() {
+        return DL;
+    }
+    
+    
+}
+//3-A- Defina una clase para representar estantes. Un estante almacena a lo sumo 20 libros.
+//Implemente un constructor que permita iniciar el estante sin libros. Provea métodos para:
+//(i) devolver la cantidad de libros que almacenados 
+//(ii) devolver si el estante está lleno
+//(iii) agregar un libro al estante 
+//(iv) devolver el libro con un título particular que se recibe.
+//C- Piense: ¿Qué modificaría en la clase definida para ahora permitir estantes que almacenen como máximo N libros? ¿Cómo instanciaría el estante?
