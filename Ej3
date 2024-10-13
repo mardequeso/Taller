@@ -1,0 +1,34 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema3;
+
+import PaqueteLectura.Lector;
+
+/**
+ *
+ * @author Martina
+ */
+public class Ej3 {
+    public static void main (String[] args){
+        System.out.println ("Ingrese cantidad de libros del estante");
+        Estante estante = new Estante(Lector.leerInt());
+        Libro libro;
+        Autor autor;
+        do {
+            System.out.println ("Ingrese nombre, biografia y origen del autor");
+            autor = new Autor(Lector.leerString(), Lector.leerString(), Lector.leerString());
+            System.out.println ("Ingrese titulo, editorial, año de edición, ISBN y precio del libro");
+            libro = new Libro(Lector.leerString(), Lector.leerString(), Lector.leerInt(), autor, Lector.leerString(), Lector.leerDouble());
+            estante.agregarLibro(libro);
+            System.out.println ("Hay " + estante.getCantLibros() + " libros en la estanteria");
+        } while (libro.getAñoEdicion() != 1868);
+        libro = estante.buscarTitulo("Mujercitas");
+        if (libro != null){
+            System.out.println (libro.getPrimerAutor());
+        }
+    }
+}
+//B- Realice un programa que instancie un estante. Cargue varios libros. A partir del estante, busque e informe el autor del libro “Mujercitas”.
