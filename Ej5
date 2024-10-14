@@ -1,0 +1,21 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema3;
+
+import PaqueteLectura.Lector;
+
+/**
+ *
+ * @author Martina
+ */
+public class Ej5 {
+    public static void main (String[] args){
+        System.out.println ("Ingrese radio, color de relleno y color de linea de su circulo");
+        Circulo circulo = new Circulo (Lector.leerDouble(), Lector.leerString(), Lector.leerString());
+        System.out.println ("El perimetro de su circulo es de " + circulo.calcularPerimetro() + " y el area " + circulo.calcularArea());
+    }
+}
+//B- Realizar un programa que instancie un círculo, le cargue información leída de teclado e informe en consola el perímetro y el área.
