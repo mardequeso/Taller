@@ -1,0 +1,64 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema3;
+
+/**
+ *
+ * @author Martina
+ */
+public class Habitacion {
+    private double costoNoche;
+    private boolean ocupada;
+    private Persona cliente;
+
+    public Habitacion() {
+    }
+
+    public Habitacion(double costoNoche) {
+        this.costoNoche = costoNoche;
+        this.ocupada = false;
+        this.cliente = null;
+    }
+
+    public double getCostoNoche() {
+        return costoNoche;
+    }
+
+    public void setCostoNoche(double costoNoche) {
+        this.costoNoche = costoNoche;
+    }
+
+    public void setOcupada(boolean ocupada) {
+        this.ocupada = ocupada;
+    }
+    
+    public boolean estaOcupada (){
+        return ocupada;
+    } 
+
+    public Persona getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Persona cliente) {
+        this.cliente = cliente;
+    }
+    
+    public void nuevoCliente (Persona cliente){
+        this.cliente = cliente;
+        this.ocupada = true;
+    }
+
+    @Override
+    public String toString() {
+        if (ocupada)
+            return "El costo de la habitacion es de " + costoNoche + ". Ocupada. " + cliente.toString();
+        else {
+            return "El costo de la habitacion es de " + costoNoche + ". Libre";
+        }
+    }
+
+}
