@@ -1,0 +1,68 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema3;
+
+import PaqueteLectura.GeneradorAleatorio;
+
+/**
+ *
+ * @author Martina
+ */
+public class Hotel {
+    private Habitacion[] vector;
+    private int DF;
+
+    public Hotel() {
+    }
+
+    public Hotel(int DF) {
+        this.DF = DF;
+        vector = new Habitacion[DF];
+        int i;
+        GeneradorAleatorio.iniciar();
+        for (i = 0; i < DF; i++){
+            vector[i] = new Habitacion(GeneradorAleatorio.generarDouble(8000 - 2000 + 1)+ 2000);
+        }
+    }
+
+    public Habitacion[] getVector() {
+        return vector;
+    }
+
+    public void setVector(Habitacion[] vector) {
+        this.vector = vector;
+    }
+
+    public int getDF() {
+        return DF;
+    }
+
+    public void setDF(int DF) {
+        this.DF = DF;
+    }
+    
+    public void ingresarCliente (Persona cliente, int habitacion){
+        this.vector[habitacion].nuevoCliente(cliente);
+    }
+    
+    public void aumentarPrecios (double aumento){
+        int i;
+        for (i = 0; i < DF; i++){
+            vector[i].setCostoNoche(vector[i].getCostoNoche() + aumento);
+        }
+    }
+
+    @Override
+    public String toString() {
+        int i;
+        String descripcion = "";
+        for (i = 0; i < DF; i++){
+            descripcion += "Habitacion n° " + i + " " + vector[i].toString() + "||";
+        }
+        return descripcion;
+    }
+    
+}
