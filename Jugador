@@ -1,0 +1,54 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema4;
+
+/**
+ *
+ * @author Martina
+ */
+public class Jugador extends Empleado {
+    private int partidosJugados, goles;
+
+    public Jugador(int partidos, int goles, String nombre, double sueldoBasico, int antigüedad) {
+        super(nombre, sueldoBasico, antigüedad);
+        setPartidosJugados(partidos);
+        setGoles(goles);
+    }
+
+    public int getPartidosJugados() {
+        return partidosJugados;
+    }
+
+    public void setPartidosJugados(int partidos) {
+        this.partidosJugados = partidos;
+    }
+
+    public int getGoles() {
+        return goles;
+    }
+
+    public void setGoles(int goles) {
+        this.goles = goles;
+    }
+
+    public double calcularEfectividad() {
+        if (getPartidosJugados() == 0){
+            return 0;
+        }
+        else{
+            return (double) getGoles()/getPartidosJugados();
+        }
+    }
+    
+    public double calcularSueldoACobrar(){
+        if (this.calcularEfectividad() > 0.5) {
+            return super.calcularSueldoACobrarSuper() + this.getSueldoBasico();
+        }
+        else{
+            return super.calcularSueldoACobrarSuper();
+        }
+    }
+}
