@@ -1,0 +1,59 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema4;
+
+/**
+ *
+ * @author Martina
+ */
+public class Circulo extends Figura {
+    double radio;
+
+    public Circulo(double radio, String unCR, String unCL) {
+        super(unCR, unCL);
+        this.setRadio(radio);
+    }
+
+    public double getRadio() {
+        return radio;
+    }
+
+    public void setRadio(double radio) {
+        this.radio = radio;
+    }
+    
+    public void setColorLinea (String CL){
+        super.setColorLinea(CL);
+    }
+    
+    public String getColorLinea (){
+        return super.getColorLinea();
+    }
+
+    public void setColorRelleno (String CR){
+        super.setColorRelleno(CR);
+    }
+    
+    public String getColorRelleno (){
+        return super.getColorRelleno();
+    }
+    
+    public double calcularPerimetro (){
+        return (2 * (Math.PI * this.getRadio()));
+    }
+    
+    public double calcularArea(){
+        return (Math.PI * (this.getRadio() * this.getRadio()));
+    }
+
+    @Override
+    public String toString() {
+        String aux = super.toString() + " Radio " + this.getRadio();
+        return aux;
+    }
+    
+    
+}
