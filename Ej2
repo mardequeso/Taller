@@ -1,0 +1,24 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema4;
+
+import PaqueteLectura.Lector;
+
+/**
+ *
+ * @author Martina
+ */
+public class Ej2 {
+    public static void main (String[] args){
+        System.out.println ("Ingrese partigos jugados, goles anotados, nombre, sueldo basico y antiguedad de su jugador");
+        Jugador jugador = new Jugador(Lector.leerInt(), Lector.leerInt(), Lector.leerString(), Lector.leerDouble(), Lector.leerInt());
+        System.out.println ("Ingrese campeonatos ganados, nombre, sueldo basico y antiguedad de su entrenador");
+        Entrenador entrenador = new Entrenador (Lector.leerInt(), Lector.leerString(), Lector.leerDouble(), Lector.leerInt());
+        System.out.println(jugador.toString());
+        System.out.println(entrenador.toString());
+    }
+}
+//F- Realizar un programa que instancie un jugador y un entrenador. Informe la representación String de cada uno.
