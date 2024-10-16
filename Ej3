@@ -1,0 +1,22 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema4;
+
+import PaqueteLectura.Lector;
+
+/**
+ *
+ * @author Martina
+ */
+public class Ej3 {
+    public static void main (String[] args){
+        System.out.println ("Ingrese nombre, DNI, edad y trabajo del trabajador ");
+        Trabajador trabajador = new Trabajador (Lector.leerString(), Lector.leerInt(), Lector.leerInt(), Lector.leerString());
+        System.out.println ("Ingrese nombre, DNI y edad de la persona");
+        Persona persona = new Persona (Lector.leerString(), Lector.leerInt(), Lector.leerInt());
+        System.out.println (trabajador.toString() + persona.toString());
+    }
+}
