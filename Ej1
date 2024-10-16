@@ -1,0 +1,24 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tema4;
+
+import PaqueteLectura.Lector;
+
+/**
+ *
+ * @author Martina
+ */
+public class Ej1 {
+    public static void main (String[] args){
+        System.out.println ("Ingrese los lados, el color de relleno y el color de linea de su triangulo");
+        Triangulo tri = new Triangulo(Lector.leerDouble(), Lector.leerDouble(), Lector.leerDouble(), Lector.leerString(), Lector.leerString());
+        System.out.println ("Ingrese el radio, el color de relleno y el color de linea de su circulo");
+        Circulo cir = new Circulo (Lector.leerDouble(), Lector.leerString(), Lector.leerString());
+        System.out.println ("Triangulo: " + tri.toString() + " Circulo: " + cir.toString());
+        tri.despintar();
+        System.out.println ("Triangulo despintado: " + tri.toString());
+    }
+}
