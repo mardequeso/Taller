@@ -1,0 +1,84 @@
+programa Pract1Ej3
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso sumarFlores(ES totalFlores: numero)
+  variables
+    cantFlores: numero
+  comenzar
+    cantFlores:= 0
+    mientras (HayFlorEnLaEsquina)
+      cantFlores:= cantFlores + 1
+      tomarFlor
+    totalFlores:= totalFlores + cantFlores
+    repetir cantFlores
+      depositarFlor
+  fin
+  proceso sumarPapeles(ES totalPapeles: numero)
+  variables
+    cantPapeles: numero
+  comenzar
+    cantPapeles:= 0
+    mientras (HayPapelEnLaEsquina)
+      cantPapeles:= cantPapeles + 1
+      tomarPapel
+    totalPapeles:= totalPapeles + cantPapeles
+    repetir cantPapeles
+      depositarPapel
+  fin
+  proceso avanzar(E escalon:numero,ES totalPapeles:numero,ES totalFlores:numero)
+  variables
+  comenzar
+    repetir escalon
+      sumarPapeles(totalPapeles)
+      sumerFlores(totalFlores)
+      mover
+  fin
+  proceso subirEscalon(E escalon: numero, ES masPapeles: numero)
+  variables
+    totalFlores: numero
+    totalPapeles: numero
+  comenzar
+    totalFlores:= 0
+    totalPapeles:= 0
+    derecha
+    avanzar(escalon)
+    izquierda
+    avanzar(escalon, totalPapeles, totalFlores)
+    si ((totalPapeles + 1) = totalFlores)
+      masPapeles:= masPapeles + 1 
+  fin
+  proceso escalera
+  variables
+    escalon: numero
+    masPapeles: numero
+  comenzar
+    escalon:= 1
+    masPapeles:= 0
+    repetir 4
+      subirEscalon(escalon, masPapeles)
+      escalon:= escalon + escalon
+    Informar(masPapeles)
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  comenzar
+    Escalera
+  fin
+variables
+  r1:robot1
+  r2:robot1
+  r3:robot1
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  Iniciar (r1, 22, 6)
+  Iniciar (r2, 17, 10)
+  Iniciar (r3, 12, 14)
+fin
