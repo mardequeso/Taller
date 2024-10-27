@@ -1,0 +1,68 @@
+programa Pract1Ej2
+procesos 
+  proceso abajo
+  comenzar
+    repetir 2
+      derecha
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarPapeles(ES cantPapeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        cantPapeles:= cantPapeles + 1
+  fin
+  proceso avanzar
+  variables
+    cantPapeles: numero
+  comenzar
+    cantPapeles:= 0
+    repetir 10
+      juntarPapeles (cantPapeles)
+      Informar(cantPapeles)
+  fin
+areas
+  cuadrado: AreaC (10,10,30,30)  
+robots
+  robot robot1
+  comenzar
+      avanzar
+  fin
+  robot robot2
+  comenzar
+    derecha
+    avanzar
+  fin
+  robot robot3
+  comenzar
+    abajo
+    avanzar
+  fin
+  robot robot4
+  comenzar
+    izquierda
+    avanzar
+  fin
+ variables
+   robotito1: robot1
+   robotito2: robot2
+   robotito3: robot3
+   robotito4: robot4
+comenzar
+  AsignarArea(robotito1, cuadrado)
+  Iniciar(robotito1, 10,10)
+  AsignarArea(robotito2, cuadrado)
+  Iniciar(robotito2, 10,20)
+  AsignarArea(robotito3, cuadrado)
+  Iniciar(robotito3, 20,20)
+  AsignarArea(robotito4, cuadrado)
+  Iniciar(robotito4, 20, 20)
+{2) Realice un programa en el que 4 robots limpien de papeles el perímetro de un cuadrado de lado 20 en sentido horario, como se muestra en la figura:
+{El vértice inferior izquierdo del cuadrado se ubica en la esquina (10,10). Al finalizar, cada robot debe informar la cantidad de papeles juntados en su lado.
+{Al realizar este programa, analizar:
+{a) ¿Cómo deben declararse la o las áreas?
+{b) ¿Existe riesgo de colisión?
