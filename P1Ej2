@@ -1,3 +1,5 @@
+REVISAR TEMA AREAS!!!
+
 programa Pract1Ej2
 procesos 
   proceso abajo
@@ -21,13 +23,16 @@ procesos
     cantPapeles: numero
   comenzar
     cantPapeles:= 0
-    repetir 10
+    repetir 19
       juntarPapeles (cantPapeles)
       mover
     Informar(cantPapeles)
   fin
 areas
-  cuadrado: AreaC (10,10,30,30)  
+  l1: AreaP (10, 10, 10, 29)
+  l2: AreaP (10, 30, 29, 30)
+  l3: AreaP (30, 30, 29, 10)
+  l4: AreaP (11, 10, 10, 30)
 robots
   robot robot1
   comenzar
@@ -54,14 +59,14 @@ variables
   robotito3:robot3
   robotito4:robot4
 comenzar
-  AsignarArea(robotito1,cuadrado)
-  AsignarArea(robotito2,cuadrado)
-  AsignarArea(robotito3,cuadrado)
-  AsignarArea(robotito4,cuadrado)
+  AsignarArea(robotito1,l1)
+  AsignarArea(robotito2,l2)
+  AsignarArea(robotito3,l3)
+  AsignarArea(robotito4,l4)
   Iniciar(robotito1,10,10)
-  Iniciar(robotito2,10,20)
-  Iniciar(robotito3,20,20)
-  Iniciar(robotito4,20,10)
+  Iniciar(robotito2,10,30)
+  Iniciar(robotito3,30,30)
+  Iniciar(robotito4,30,10)
 fin
 {2) Realice un programa en el que 4 robots limpien de papeles el perímetro de un cuadrado de lado 20 en sentido horario, como se muestra en la figura:
 {El vértice inferior izquierdo del cuadrado se ubica en la esquina (10,10). Al finalizar, cada robot debe informar la cantidad de papeles juntados en su lado.
