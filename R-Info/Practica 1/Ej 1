@@ -1,0 +1,40 @@
+{Realice un programa para que un robot junte todas las flores de la avenida 1 y las deposite al final de dicha avenida. Al finalizar, debe informar la cantidad de flores depositadas y la cantidad de esquinas sin flores que encontró durante el recorrido.}
+programa ejemplo
+procesos
+  proceso juntarFlores (ES cantF:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cantF:=cantF+1
+  fin
+  proceso dejarFlores (E cantF:numero)
+  comenzar
+    repetir cantF {te cambio el mientras x un repetir pq ahora es una cant fija}
+      depositarFlor
+  fin
+  proceso recorrerAvenida(E numAv: numero; ES cantF:numero) {agrego el parametro}
+  comenzar
+    Pos(numAv, 1)
+    repetir 99
+      juntarFlores(cantF){se lo paso para que el proceso las cuente}
+      mover
+    juntarFlores(cantF){lo hago una vez mas para q cuente las de la última esquina
+   dejarFlores(cantF) {tengo q depositar exactamente la cant de flores q agarre *}
+  fin
+areas
+  ciudad: AreaP (1,1,1,100) {el robot no pasa x toda la ciudad, solamente por esta avenida}
+robots
+  robot robot1
+  variables
+    cantFlores:numero {te agrego la variable para informarla}
+  comenzar
+    cantFlores:=0
+    recorrerAvenida(1, cantFlores) {se la paso para q cuente}
+    Informar(cantFlores) {informo a cantidad de flores}
+  fin
+variables
+  robotito: robot1
+comenzar
+  AsignarArea(robotito, ciudad)
+  Iniciar(robotito, 1,1)
+fin
