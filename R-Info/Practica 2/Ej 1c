@@ -1,3 +1,4 @@
+{ Martina 2024-10-30T16:02:54.374 }
 programa Ej1
 procesos
   proceso juntarFlores (ES flores: numero)
@@ -26,11 +27,11 @@ robots
   robot robot1
   variables
     flores:numero
-    nRobot:numero
+    nR:numero
   comenzar
-    RecibirMensaje(nRobot,rF)
+    RecibirMensaje(nR,rF)
     limpiarAv(flores)
-    EnviarMensaje(nRobot,rF)
+    EnviarMensaje(nR,rF)
     EnviarMensaje(flores,rF)
   fin
   robot robotF
@@ -39,58 +40,59 @@ robots
     max:numero
     r:numero
   comenzar
-    max:=0
     EnviarMensaje(1,r1)
     EnviarMensaje(2,r2)
     EnviarMensaje(3,r3)
     EnviarMensaje(4,r4)
     EnviarMensaje(5,r5)
     EnviarMensaje(6,r6)
+    max:=0
     repetir 6
       RecibirMensaje(r,*)
-      si(r=1)
+      si(r = 1)
         RecibirMensaje(flores,r1)
       sino
-        si(r=2)
+        si(r = 2)
           RecibirMensaje(flores,r2)
         sino
-          si(r=3)
+          si(r = 3)
             RecibirMensaje(flores,r3)
           sino 
-            si(r=4)
+            si(r = 4)
               RecibirMensaje(flores,r4)
             sino
-              si(r=5)
+              si(r = 5)
                 RecibirMensaje(flores,r5)
               sino
                 RecibirMensaje(flores,r6)
       si(flores>= max)
         max:=flores
+    Informar(max) 
   fin
 variables
-  r1:robot1
-  r2:robot1
-  r3:robot1
-  r4:robot1
-  r5:robot1
-  r6:robot1
-  rF:robotF
+  r1: robot1
+  r2: robot1
+  r3: robot1
+  r4: robot1
+  r5: robot1
+  r6: robot1
+  rF: robotF
 comenzar
-  AsignarArea(r1,area1)
-  AsignarArea(r2,area2)
-  AsignarArea(r3,area3)
-  AsignarArea(r4,area4)
-  AsignarArea(r5,area5)
-  AsignarArea(r6,area6)
-  AsignarArea(rF,areaF)
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(r4, area4)
+  AsignarArea(r5, area5)
+  AsignarArea(r6, area6)
+  AsignarArea(rF, areaF)
   Iniciar(r1,1,1)
   Iniciar(r2,2,11)
   Iniciar(r3,3,21)
-  Iniciar(r1,4,31)
-  Iniciar(r2,5,41)
-  Iniciar(r3,6,51)
+  Iniciar(r4,4,31)
+  Iniciar(r5,5,41)
+  Iniciar(r6,6,51)
   Iniciar(rF,2,1)
 fin  
 {c. Modifique el ejercicio anterior para que ahora participen 6 robots. Robot 1: Avenida 1, entre las calles 1 y 10. Robot 2: Avenida 2, entre las calles 11 y 20. 
-Robot 3: Avenida 3, entre las calles 21 y 30. Robot 4: Avenida 4, entre las calles 31 y 40. Robot 5: Avenida 5, entre las calles 41 y 50. Robot 6: Avenida 6, entre
-las calles 51 y 60.Fiscalizador: Avenida 2, calle 1. El fiscalizador deberá informar la cantidad de flores que juntó el robot ganador
+Robot 3: Avenida 3, entre las calles 21 y 30. Robot 4: Avenida 4, entre las calles 31 y 40. Robot 5: Avenida 5, entre las calles 41 y 50. Robot 6: Avenida 6, entre 
+las calles 51 y 60. Fiscalizador: Avenida 2, calle 1 El fiscalizador deberá informar la cantidad de flores que juntó el robot ganador
