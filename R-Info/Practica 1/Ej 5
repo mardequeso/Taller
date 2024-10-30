@@ -66,7 +66,7 @@ areas
   area1: AreaP (1,75,15,80)
   area2: AreaP(75, 81, 80, 100)
   area3: AreaP(71,10,100,15)
-  area4: AreaP(10,1,15,15)
+  area4: AreaP(10,1,15,10)
 robots
   robot robot1
   variables
