@@ -1,0 +1,102 @@
+programa Ej2
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso sumarFlores(ES totalFlores:numero)
+  variables
+    cantFlores:numero
+  comenzar
+    cantFlores:=0
+    mientras (HayFlorEnLaEsquina)
+      cantFlores:=cantFlores+1
+      tomarFlor
+    totalFlores:=totalFlores+cantFlores
+    repetir cantFlores
+      depositarFlor
+  fin
+  proceso sumarPapeles(ES totalPapeles:numero)
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    mientras (HayPapelEnLaEsquina)
+      cantPapeles:=cantPapeles+1
+      tomarPapel
+    totalPapeles:=totalPapeles+cantPapeles
+    repetir cantPapeles
+      depositarPapel
+  fin
+  proceso avanzar(E largo:numero;ES totalPapeles:numero;ES totalFlores:numero)
+  comenzar
+    repetir largo
+      sumarPapeles(totalPapeles)
+      sumarFlores(totalFlores)
+      mover
+  fin
+  proceso subirEscalon(E alto:numero; ES masFlores:numero)
+  variables
+    totalFlores:numero
+    totalPapeles:numero
+  comenzar
+    totalFlores:= 0
+    totalPapeles:= 0
+    derecha
+    avanzar(1, totalPapeles, totalFlores)
+    izquierda
+    avanzar(alto, totalPapeles, totalFlores)
+    si (totalPapeles < totalFlores)
+      masFlores:= masFlores + 1
+  fin
+  proceso escalera(ES masFlores:numero)
+  variables
+    alto: numero
+    masFlores: numero
+  comenzar
+    Random(alto,1,5)
+    masFlores:= 0
+    repetir 4
+      subirEscalon(alto, masFlores)
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    masFlores:numero
+  comenzar
+    escalera(masFlores)
+    EnviarMensaje(masFlores,rJ)
+  fin
+  robot robotJ
+  variables
+    total: numero
+    masFlores:numero
+  comenzar
+    total:= 0
+    repetir 3
+      RecibirMensaje(masFlores,*)
+      total:= total + masFlores
+    Informar(total)
+  fin
+variables
+  r1: robot1
+  r2: robot1
+  r3: robot1
+  rJ: robotJ
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  AsignarArea(rJ, ciudad)
+  Iniciar (r1, 2, 1)
+  Iniciar (r2, 7, 1)
+  Iniciar (r3, 12, 1)
+  Iniciar (rJ, 1, 1)
+fin
+{2. Realice un programa en el que 3 robots realizan una escalera de 4 escalones cada uno. Todos los escalones tienen un ancho fijo de 1, y un alto alelatorio entre
+1 y 5. Al finalizar el recorrido, cada robot deberá enviar al robot jefe la cantidad de escalones que tenían más flores que papeles. Una vez que los tres robots 
+finalizaron, el robot jefe deberá informar la suma de las cantidades enviadas por los 3 robots. El robot jefe inicia en la esquina (1,1). El robot 1 inicia en la 
+esquina (2,1). El robot 2 inicia en la esquina (7,1). El robot 3 inicia en la esquina (12,1)
