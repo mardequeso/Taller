@@ -1,0 +1,99 @@
+{ Martina 2024-10-30T16:02:54.374 }
+programa Ej1
+procesos
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores+1
+  fin
+  proceso limpiarAv(ES flores: numero)
+  comenzar
+    flores:=0
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+areas
+  area1:AreaP(1,1,1,10)
+  area2:AreaP(2,11,2,20)
+  area3:AreaP(3,21,3,30)
+  area4:AreaP(4,31,4,40)
+  area5:AreaP(5,41,5,50)
+  area6:AreaP(6,51,6,60)
+  areaF:AreaP(2,1,2,1)
+robots
+  robot robot1
+  variables
+    flores:numero
+    nR:numero
+  comenzar
+    RecibirMensaje(nR,rF)
+    limpiarAv(flores)
+    EnviarMensaje(nR,rF)
+    EnviarMensaje(flores,rF)
+  fin
+  robot robotF
+  variables
+    flores:numero
+    max:numero
+    r:numero
+    rMax: numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    EnviarMensaje(5,r5)
+    EnviarMensaje(6,r6)
+    max:=0
+    repetir 6
+      RecibirMensaje(r,*)
+      si(r = 1)
+        RecibirMensaje(flores,r1)
+      sino
+        si(r = 2)
+          RecibirMensaje(flores,r2)
+        sino
+          si(r = 3)
+            RecibirMensaje(flores,r3)
+          sino 
+            si(r = 4)
+              RecibirMensaje(flores,r4)
+            sino
+              si(r = 5)
+                RecibirMensaje(flores,r5)
+              sino
+                RecibirMensaje(flores,r6)
+      si(flores>= max)
+        max:=flores
+        rMax:= r
+    Informar(max) 
+    Informar(rMax)
+  fin
+variables
+  r1: robot1
+  r2: robot1
+  r3: robot1
+  r4: robot1
+  r5: robot1
+  r6: robot1
+  rF: robotF
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(r4, area4)
+  AsignarArea(r5, area5)
+  AsignarArea(r6, area6)
+  AsignarArea(rF, areaF)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,11)
+  Iniciar(r3,3,21)
+  Iniciar(r4,4,31)
+  Iniciar(r5,5,41)
+  Iniciar(r6,6,51)
+  Iniciar(rF,2,1)
+fin  
+{d. Modifique el inciso anterior para que ahora el fiscalizador informe también, cuál fue el robot ganador.
