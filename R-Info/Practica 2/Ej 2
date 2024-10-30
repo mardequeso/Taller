@@ -1,0 +1,64 @@
+programa Ej1
+procesos
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores+1
+  fin
+  proceso limpiarAv(ES flores: numero)
+  comenzar
+    flores:=0
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+areas
+  area1:AreaP(1,1,1,10)
+  area2:AreaP(2,11,2,20)
+  area3:AreaP(2,1,2,1)
+robots
+  robot robot1
+  variables
+    flores:numero
+    nRobot:numero
+  comenzar
+    RecibirMensaje(nRobot,r3)
+    limpiarAv(flores)
+    EnviarMensaje(nRobot,r3)
+    EnviarMensaje(flores,r3)
+  fin
+  robot robotF
+  variables
+    flores1:numero
+    flores2:numero
+    r:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    repetir 2
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(flores1,r1)
+      sino
+        RecibirMensaje(flores2,r2)
+    si(flores1>=flores2)
+      Informar(flores1-flores2)
+    sino
+      Informar(flores2-flores1)
+  fin
+variables
+  r1: robot1
+  r2: robot1
+  r3: robotF
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,11)
+  Iniciar(r3,2,1)
+fin  
+{b. Modifique el ejercicio anterior, considerando que ahora habrá un robot fiscalizador, que será responsable de informar la diferencia de flores que obtuvo el 
+ganador con respecto al perdedor. El robot fiscalizador se ubica en la esquina (2,1)
