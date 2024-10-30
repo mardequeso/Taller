@@ -61,7 +61,10 @@ procesos
       subirEscalon(alto, masFlores)
   fin
 areas
-  ciudad: AreaC (1,1,100,100)
+  area1: AreaP (2,1,6,21)
+  area2: AreaP (7,1,11,21)
+  area3: AreaP (12,1,16,21)
+  areaJ: AreaP (1,1,1,1)
 robots
   robot robot1
   variables
@@ -87,10 +90,10 @@ variables
   r3: robot1
   rJ: robotJ
 comenzar
-  AsignarArea(r1, ciudad)
-  AsignarArea(r2, ciudad)
-  AsignarArea(r3, ciudad)
-  AsignarArea(rJ, ciudad)
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(rJ, areaJ)
   Iniciar (r1, 2, 1)
   Iniciar (r2, 7, 1)
   Iniciar (r3, 12, 1)
