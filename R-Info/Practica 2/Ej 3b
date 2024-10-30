@@ -1,0 +1,100 @@
+programa Ej4
+procesos
+  proceso juntarPapeles (ES Papeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      Papeles:= Papeles+1
+  fin
+  proceso limpiarPapeles(ES Papeles: numero)
+  comenzar
+    juntarPapeles(Papeles)
+    repetir 9
+      mover
+      juntarPapeles(Papeles)
+  fin
+  proceso juntarFlores(ES Flores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      Flores:= Flores+1
+  fin
+  proceso limpiarFlores(ES Flores: numero)
+  comenzar
+    juntarFlores(Flores)
+    repetir 9
+      mover
+      juntarFlores(Flores)
+  fin
+areas
+  areaA: AreaPC(1,1,40,1)
+  areaB: AreaPC(1,5,40,5)
+robots
+  robot robotA1
+  variables
+    papeles: numero
+  comenzar
+    derecha
+    papeles:= 0
+    limpiarPapeles(papeles)
+    EnviarMensaje(papeles,A2)
+    RecibirMensaje(papeles,A2)
+    Pos(PosAv+11,PosCa)
+    limpiarPapeles(papeles)
+    EnviarMensaje(papeles,A2)
+  fin
+  robot robotA2
+  variables
+    papeles: numero
+  comenzar
+    derecha
+    RecibirMensaje(papeles,A1)
+    limpiarPapeles(papeles)
+    EnviarMensaje(papeles,A1)
+    Pos(PosAv+11,PosCa)
+    RecibirMensaje(papeles,A1)
+    limpiarPapeles(papeles)
+    Informar(papeles)
+  fin
+  robot robotB1
+  variables
+    flores: numero
+  comenzar
+    derecha
+    flores:= 0
+    limpiarFlores(flores)
+    EnviarMensaje(flores,B2)
+    RecibirMensaje(flores,B2)
+    Pos(PosAv+11,PosCa)
+    limpiarFlores(flores)
+    EnviarMensaje(flores,B2)
+  fin
+  robot robotB2
+  variables
+    flores: numero
+  comenzar
+    derecha
+    RecibirMensaje(flores,B1)
+    limpiarFlores(flores)
+    EnviarMensaje(flores,B1)
+    Pos(PosAv+11,PosCa)
+    RecibirMensaje(flores,B1)
+    limpiarFlores(flores)
+    Informar(flores)
+  fin
+variables
+  A1: robotA1
+  A2: robotA2
+  B1: robotB1
+  B2: robotB2
+comenzar
+  AsignarArea(A1, areaA)
+  AsignarArea(A2, areaA)
+  AsignarArea(B1, areaB)
+  AsignarArea(B2, areaB)
+  Iniciar(A1,1,1)
+  Iniciar(A2,11,1)
+  Iniciar(B1,1,5)
+  Iniciar(B2,11,5)
+fin
+{b. Modifique el programa anterior para que cada equipo repita el recorrido con las siguientes 20 esquinas de sus correspondientes calles.
