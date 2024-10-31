@@ -81,31 +81,23 @@ robots
     EnviarMensaje(entradas,r1)  
     EnviarMensaje(entradas,r2)  
     EnviarMensaje(entradas,r3)  
-    EnviarMensaje(entradas,r4)  
-    repetir 4
+    EnviarMensaje(entradas,r4)
+    repetir 6
       RecibirMensaje(r,*)
-      si(r=1)
+      si(r = 1)
         RecibirMensaje(total,r1)
-        si(total>max)
-          max:=total
-          rMax:=r
       sino
-        si(r=2)
+        si(r = 2)
           RecibirMensaje(total,r2)
-          si(total>max)
-            max:=total
-            rMax:=r
         sino
-          si(r=3)
+          si(r = 3)
             RecibirMensaje(total,r3)
-            si(total>max)
-              max:=total
-              rMax:=r 
-          sino
-            RecibirMensaje(total,r1)
-            si(total>max)
-              max:=total
-              rMax:=r  
+          sino 
+            si(r = 4)
+              RecibirMensaje(total,r4)
+      si(total>= max)
+        max:=total
+        rMax:= r
     si(rMax=1)
       EnviarMensaje(V,r1)
       EnviarMensaje(F,r2)
