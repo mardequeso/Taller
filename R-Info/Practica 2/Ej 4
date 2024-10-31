@@ -1,0 +1,149 @@
+programa Ej4
+procesos
+  proceso limpiarFlores(ES flores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores+1
+  fin
+  proceso limpiarPapeles(ES papeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles+1
+  fin
+  proceso limpiarEsquina(ES total: numero)
+  variables
+    flores, papeles: numero
+  comenzar
+    flores:= 0
+    papeles:= 0
+    limpiarPapeles(papeles)
+    limpiarFlores(flores)
+    total:= total + flores + papeles
+  fin
+areas
+  cuadrado: AreaPC(25,25,75,75)
+  areaJ: AreaP(1,1,1,1)
+  area1:AreaP(25,1,25,1)
+  area2:AreaP(30,1,30,1)
+  area3:AreaP(35,1,35,1)
+  area4:AreaP(40,1,40,1)
+robots
+  robot competidor
+  variables
+    total,av,ca, avComienzo, caComienzo,entradas,n: numero
+    gane: boolean
+  comenzar
+    total:= 0
+    entradas:= 0
+    avComienzo:= PosAv
+    caComienzo:= PosCa
+    RecibirMensaje(n,rJ)
+    mientras(entradas<>10)
+      RecibirMensaje(entradas, rJ)
+      si(entradas<>10)
+        Random(av,25,75)
+        Random(ca,25,75)
+        Pos(av,ca)
+        limpiarEsquina(total)
+        Pos(avComienzo,caComienzo)
+    EnviarMensaje(n,rJ)
+    EnviarMensaje(total,rJ)
+    RecibirMensaje(gane, rJ)
+    si(gane)
+      Pos(50,50)
+  fin
+  robot jefe
+  variables
+    entradas, r, total,rMax,max: numero
+  comenzar
+    entradas:= 0
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    repetir 10
+      Random(r,1,4)
+      si (r=1)
+        EnviarMensaje(entradas,r1)
+      sino
+        si(r=2)
+          EnviarMensaje(entradas,r2)
+        sino
+          si(r=3)
+            EnviarMensaje(entradas,r3)
+          sino
+            EnviarMensaje(entradas,r4)
+      entradas:=entradas+1
+    EnviarMensaje(entradas,r1)  
+    EnviarMensaje(entradas,r2)  
+    EnviarMensaje(entradas,r3)  
+    EnviarMensaje(entradas,r4)  
+    repetir 4
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(total,r1)
+        si(total > max)
+          max = total
+          rMax = r
+     sino
+       si(r=2)
+        RecibirMensaje(total,r2)
+        si(total>max)
+          max=total
+          rMax=r
+       sino
+        si(r=3)
+        RecibirMensaje(total,r3)
+        si(total>max)
+          max=total
+          rMax=r 
+        sino
+          RecibirMensaje(total,r1)
+          si(total>max)
+            max=total
+            rMax=r  
+    si(rMax=1)
+      EnviarMensaje(V,r1)
+      EnviarMensaje(F,r2)
+      EnviarMensaje(F,r3)
+      EnviarMensaje(F,r4)
+    sino
+      si(rMax=2)
+        EnviarMensaje(F,r1)
+        EnviarMensaje(V,r2)
+        EnviarMensaje(F,r3)
+        EnviarMensaje(F,r4)
+      sino
+        si(rMax=3)
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r2)
+          EnviarMensaje(V,r3)
+          EnviarMensaje(F,r4)
+        sino
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r2)
+          EnviarMensaje(F,r3)
+          EnviarMensaje(V,r4)
+  fin
+variables
+  r1,r2,r3,r4: competidor
+  rJ: jefe
+comenzar
+  AsignarArea(r1,cuadrado)
+  AsignarArea(r1,area1)
+  AsignarArea(r2,cuadrado)
+  AsignarArea(r2,area2)
+  AsignarArea(r3,cuadrado)
+  AsignarArea(r3,area3)
+  AsignarArea(r4,cuadrado)
+  AsignarArea(r4,area4)
+  AsignarArea(rJ,areaJ)
+  Iniciar(r1,25,1)
+  Iniciar(r2,30,1)
+  Iniciar(r3,35,1)
+  Iniciar(r4,40,1)
+  Iniciar(rJ,1,1)
+fin
+{4. Realice un programa en el que un robot fiscalizador controla el acceso de 4 robots recolectores al cuadrante encerrado entre las esquinas (25,25) y (75,75) . Para ello, el robot fiscalizador avisa a un robot recolector aleatorio que puede ingresar al área. El robot que recibe la autorización de acceso calcula una esquina aleatoria dentro del área, limpia dicha esquina de flores y papeles, regresa a su esquina y avisa al robot  fiscalizador que ya finalizó. Se realizarán en total 10 accesos al cuadrante entre los 4 robots recolectores. Al finalizar, el robot fiscalizador deberá indicar al robot ganador que se posicione en la esquina (50,50). El robot fiscalizador inicia en la esquina (1,1) y los robots recolectores inician en las esquinas (25,1) (30,1) (35,1) y (40,1) respectivamente
