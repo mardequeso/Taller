@@ -59,6 +59,8 @@ robots
     entradas, r, total,rMax,max: numero
   comenzar
     entradas:= 0
+    rMax:= 0
+    max:=-1
     EnviarMensaje(1,r1)
     EnviarMensaje(2,r2)
     EnviarMensaje(3,r3)
@@ -84,26 +86,26 @@ robots
       RecibirMensaje(r,*)
       si(r=1)
         RecibirMensaje(total,r1)
-        si(total > max)
-          max = total
-          rMax = r
-     sino
-       si(r=2)
-        RecibirMensaje(total,r2)
         si(total>max)
-          max=total
-          rMax=r
-       sino
-        si(r=3)
-        RecibirMensaje(total,r3)
-        si(total>max)
-          max=total
-          rMax=r 
-        sino
-          RecibirMensaje(total,r1)
+          max:=total
+          rMax:=r
+      sino
+        si(r=2)
+          RecibirMensaje(total,r2)
           si(total>max)
-            max=total
-            rMax=r  
+            max:=total
+            rMax:=r
+        sino
+          si(r=3)
+            RecibirMensaje(total,r3)
+            si(total>max)
+              max:=total
+              rMax:=r 
+          sino
+            RecibirMensaje(total,r1)
+            si(total>max)
+              max:=total
+              rMax:=r  
     si(rMax=1)
       EnviarMensaje(V,r1)
       EnviarMensaje(F,r2)
@@ -122,10 +124,16 @@ robots
           EnviarMensaje(V,r3)
           EnviarMensaje(F,r4)
         sino
-          EnviarMensaje(F,r1)
-          EnviarMensaje(F,r2)
-          EnviarMensaje(F,r3)
-          EnviarMensaje(V,r4)
+          si(rMax=4)
+            EnviarMensaje(F,r1)
+            EnviarMensaje(F,r2)
+            EnviarMensaje(F,r3)
+            EnviarMensaje(V,r4)
+          sino
+            EnviarMensaje(F,r1)
+            EnviarMensaje(F,r2)
+            EnviarMensaje(F,r3)
+            EnviarMensaje(F,r4)
   fin
 variables
   r1,r2,r3,r4: competidor
