@@ -1,0 +1,25 @@
+  
+    repetir 4
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(total,r1)
+        si(total > max)
+          max:=total
+          rMax:=r
+      sino
+        si(r=2)
+          RecibirMensaje(total,r2)
+          si(total>max)
+            max:=total
+            rMax:=r
+        sino
+          si(r=3)
+            RecibirMensaje(total,r3)
+            si(total>max)
+              max:=total
+              rMax:=r 
+          sino
+            RecibirMensaje(total,r1)
+            si(total>max)
+              max:=total
+              rMax:=r  
