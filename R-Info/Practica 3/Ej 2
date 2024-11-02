@@ -1,0 +1,166 @@
+programa Ej2
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso darseVuelta
+  comenzar
+    repetir 2
+      derecha
+  fin
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores+1
+  fin
+  proceso juntarPapeles(ES papeles: numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles+1
+  fin
+  proceso escalonF (E largo: numero; ES flores: numero)
+  comenzar
+    repetir largo
+      mover
+    derecha
+    repetir largo
+      mover
+    juntarFlores(flores)
+    izquierda
+  fin
+  proceso escalonInversoF (E largo: numero; ES flores: numero)
+  comenzar
+    repetir largo
+      mover
+    derecha
+    juntarFlores(flores)
+    repetir largo
+      mover
+    izquierda
+  fin
+  proceso escaleraF(ES largo: numero; ES flores: numero; E n: numero)
+  comenzar
+    repetir 4
+      escalonF(largo, flores)
+      largo:= largo-1
+    mover
+    derecha
+    BloquearEsquina(PosAv+1, PosCa)
+    mover
+    EnviarMensaje(n,rJ)
+    darseVuelta
+    mover
+    LiberarEsquina(PosAv+1, PosCa)
+  fin
+  proceso escaleraInversaF (ES largo: numero; ES flores: numero)
+  comenzar
+    repetir 4
+      largo:= largo+1
+      escalonInversoF(largo, flores)
+  fin
+  proceso escalonP (E largo: numero; ES papeles: numero)
+  comenzar
+    repetir largo
+      mover
+    izquierda
+    repetir largo
+      mover
+    derecha
+    juntarPapeles(papeles)
+  fin
+  proceso escalonInversoP(E largo: numero; ES papeles: numero)
+  comenzar
+    repetir largo
+      mover
+    izquierda
+    juntarPapeles(papeles)
+    repetir largo
+      mover
+    derecha
+  fin
+  proceso escaleraP(ES largo: numero; ES papeles: numero; E n: numero)
+  comenzar
+    repetir 4
+      escalonP(largo, papeles)
+      largo:= largo-1
+    mover
+    izquierda
+    BloquearEsquina(PosAv-1, PosCa)
+    mover
+    EnviarMensaje(n,rJ)
+    darseVuelta
+    mover
+    LiberarEsquina(PosAv-1, PosCa)
+  fin
+  proceso escaleraInversaP(ES largo: numero; ES papeles: numero)
+  comenzar
+    repetir 4
+      largo:= largo+1
+      escalonInversoP(largo, papeles)
+  fin
+areas
+  areaF: AreaP(1,1,15,30)
+  areaP: AreaP(17,1,31,30)
+  medio:AreaPC(16,16,16,16)
+  areaJ: AreaP(16,1,16,1)
+robots
+  robot corredorF
+  variables
+    flores, n, largo: numero
+  comenzar
+    flores:=0
+    largo:= 5
+    RecibirMensaje(n, rJ)
+    escaleraF(largo, flores, n)
+    escaleraInversaF(largo, flores)
+    EnviarMensaje(V, rJ)
+    Informar("La cantidad de flores juntadas fue de ", flores)
+  fin
+  robot corredorP
+  variables
+    papeles, n, largo: numero
+  comenzar
+    papeles:=0
+    largo:= 5
+    RecibirMensaje(n, rJ)
+    escaleraP(largo, papeles, n)
+    escaleraInversaP(largo, papeles)
+    EnviarMensaje(V, rJ)
+    Informar("La cantidad de papeles juntadas fue de ", papeles)
+  fin
+  robot jefe
+  variables
+    terminaron: boolean
+    primero, segundo: numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    RecibirMensaje(primero,*)
+    RecibirMensaje(segundo,*)
+    repetir 2
+      RecibirMensaje(terminaron, *)
+    Informar("El primero en llegar a la esquina fue el ", primero)
+  fin
+variables
+  r1: corredorF
+  r2: corredorP
+  rJ: jefe
+comenzar
+  AsignarArea(r1,areaF)
+  AsignarArea(r1,medio)
+  AsignarArea(r2,areaP)
+  AsignarArea(r2,medio)
+  AsignarArea(rJ,areaJ)
+  Iniciar(r1,1,1)
+  Iniciar(r2,31,1)
+  Iniciar(rJ,16,1)
+fin
+{2- Realice un programa en el cual 2 robots corren una carrera. El recorrido realizado por cada uno es el que se muestra en la siguiente figura. Durante el 
+recorrido el robot 1 debe juntar todas las flores que encuentre en los vértices de cada escalón, y el robot 2 debe juntar todos los papeles que encuentre en los 
+vértices de cada escalón. Al finalizar deben informar la cantidad de elementos recogidos. El robot 1 debe iniciar su recorrido en la esquina (1,1) y el robot 2 en 
+la esquina (31,1). Al finalizar la carrera, un robot jefe (inicializado en la esquina (15,1) ) debe informar qué robot llegó primero a la esquina central de su 
+recorrido.
