@@ -32,22 +32,23 @@ areas
 robots
   robot competidor
   variables
-    total,av,ca, avComienzo, caComienzo,entradas,n: numero
+    total,av,ca, avComienzo, caComienzo,n: numero
     gane: boolean
   comenzar
     total:= 0
-    entradas:= 0
     avComienzo:= PosAv
     caComienzo:= PosCa
+    gane:= F
     RecibirMensaje(n,rJ)
-    mientras(entradas<>10)
-      RecibirMensaje(entradas, rJ)
-      si(entradas<>10)
+    mientras(gane = F)
+      RecibirMensaje(gane, rJ)
+      si(gane = F)
         Random(av,25,75)
         Random(ca,25,75)
         Pos(av,ca)
         limpiarEsquina(total)
         Pos(avComienzo,caComienzo)
+        EnviarMensaje(V,rJ)
     EnviarMensaje(n,rJ)
     EnviarMensaje(total,rJ)
     RecibirMensaje(gane, rJ)
@@ -56,9 +57,9 @@ robots
   fin
   robot jefe
   variables
-    entradas, r, total,rMax,max: numero
+    r, total,rMax,max: numero
+    termino: boolean
   comenzar
-    entradas:= 0
     rMax:= 0
     max:=-1
     EnviarMensaje(1,r1)
@@ -68,21 +69,24 @@ robots
     repetir 10
       Random(r,1,4)
       si (r=1)
-        EnviarMensaje(entradas,r1)
+        EnviarMensaje(F,r1)
+        RecibirMensaje(termino,r1)
       sino
         si(r=2)
-          EnviarMensaje(entradas,r2)
+          EnviarMensaje(F,r2)
+          RecibirMensaje(termino,r2)
         sino
           si(r=3)
-            EnviarMensaje(entradas,r3)
+            EnviarMensaje(F,r3)
+            RecibirMensaje(termino,r3)
           sino
-            EnviarMensaje(entradas,r4)
-      entradas:=entradas+1
-    EnviarMensaje(entradas,r1)  
-    EnviarMensaje(entradas,r2)  
-    EnviarMensaje(entradas,r3)  
-    EnviarMensaje(entradas,r4)
-    repetir 6
+            EnviarMensaje(F,r4)
+            RecibirMensaje(termino,r4)
+    EnviarMensaje(V,r1)  
+    EnviarMensaje(V,r2)  
+    EnviarMensaje(V,r3)  
+    EnviarMensaje(V,r4)
+    repetir 4
       RecibirMensaje(r,*)
       si(r = 1)
         RecibirMensaje(total,r1)
@@ -98,34 +102,22 @@ robots
       si(total>= max)
         max:=total
         rMax:= r
-    si(rMax=1)
+    si(rMax<>1)
+      EnviarMensaje(F,r1)
+    sino
       EnviarMensaje(V,r1)
+    si(rMax<>2)
       EnviarMensaje(F,r2)
+    sino
+      EnviarMensaje(V,r2)
+    si(rMax<>3)
       EnviarMensaje(F,r3)
+    sino
+      EnviarMensaje(V,r3)
+    si(rMax<>4)
       EnviarMensaje(F,r4)
     sino
-      si(rMax=2)
-        EnviarMensaje(F,r1)
-        EnviarMensaje(V,r2)
-        EnviarMensaje(F,r3)
-        EnviarMensaje(F,r4)
-      sino
-        si(rMax=3)
-          EnviarMensaje(F,r1)
-          EnviarMensaje(F,r2)
-          EnviarMensaje(V,r3)
-          EnviarMensaje(F,r4)
-        sino
-          si(rMax=4)
-            EnviarMensaje(F,r1)
-            EnviarMensaje(F,r2)
-            EnviarMensaje(F,r3)
-            EnviarMensaje(V,r4)
-          sino
-            EnviarMensaje(F,r1)
-            EnviarMensaje(F,r2)
-            EnviarMensaje(F,r3)
-            EnviarMensaje(F,r4)
+      EnviarMensaje(V,r4)
   fin
 variables
   r1,r2,r3,r4: competidor
@@ -146,4 +138,8 @@ comenzar
   Iniciar(r4,40,1)
   Iniciar(rJ,1,1)
 fin
-{4. Realice un programa en el que un robot fiscalizador controla el acceso de 4 robots recolectores al cuadrante encerrado entre las esquinas (25,25) y (75,75) . Para ello, el robot fiscalizador avisa a un robot recolector aleatorio que puede ingresar al área. El robot que recibe la autorización de acceso calcula una esquina aleatoria dentro del área, limpia dicha esquina de flores y papeles, regresa a su esquina y avisa al robot  fiscalizador que ya finalizó. Se realizarán en total 10 accesos al cuadrante entre los 4 robots recolectores. Al finalizar, el robot fiscalizador deberá indicar al robot ganador que se posicione en la esquina (50,50). El robot fiscalizador inicia en la esquina (1,1) y los robots recolectores inician en las esquinas (25,1) (30,1) (35,1) y (40,1) respectivamente
+{4. Realice un programa en el que un robot fiscalizador controla el acceso de 4 robots recolectores al cuadrante encerrado entre las esquinas (25,25) y (75,75) . 
+Para ello, el robot fiscalizador avisa a un robot recolector aleatorio que puede ingresar al área. El robot que recibe la autorización de acceso calcula una 
+esquina aleatoria dentro del área, limpia dicha esquina de flores y papeles, regresa a su esquina y avisa al robot  fiscalizador que ya finalizó. Se realizarán en 
+total 10 accesos al cuadrante entre los 4 robots recolectores. Al finalizar, el robot fiscalizador deberá indicar al robot ganador que se posicione en la esquina
+(50,50). El robot fiscalizador inicia en la esquina (1,1) y los robots recolectores inician en las esquinas (25,1) (30,1) (35,1) y (40,1) respectivamente
