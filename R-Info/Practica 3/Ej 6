@@ -4,15 +4,217 @@ procesos
   comenzar
     mientras(HayPapelEnLaEsquina)
       tomarPapel
-      papeles:== papeles+1
+      papeles:= papeles+1
   fin
   proceso juntarFlores(ES flores: numero)
   comenzar
     mientras(HayFlorEnLaEsquina)
       tomarFlor
-      flores:== flores+1
+      flores:= flores+1
   fin
-  proceso AvP(ES papeles)
-    mientras ((papeles>0) y (PosAv < 100))
-      
-{6.a- Tres robots deben recorrer el perímetro de su cuadrante, como se indica a continuación: El robot 1 comienza la esquina (2,2) y debe realizar un cuadrante de 6x6 juntando todas las flores que encuentre. El robot 2 comienza en la esquina (5,5) y debe realizar un cuadrante de 10x10 juntando todas las flores y los papeles que encuentre. El robot 3 comienza en la esquina (9,9) y debe realizar un cuadrante de 7x7 juntando todos los papeles que encuentre. Cada robot que finalice su cuadrante deberá avisar al robot fiscalizador. Al recibir el aviso, el robot fiscalizador indicará inmediatamente una calle a la que deberá dirigirse el robot recolector, considerando que el robot que finalizó primero irá a la calle 20, el segundo a la 21 y el tercero a la 22. Cuando los robots recolectores reciben un número de calle, deberán posicionarse en la avenida 1 de dicha calle, y avanzar a lo largo de la calle depositando en cada esquina un papel, una flor o ambos, según lo que cada robot haya juntado. El recorrido finalizará al completar la calle o vaciarse las bolsas.
+  proceso avanzarF(ES flores: numero; E cant: numero)
+  comenzar
+    repetir cant
+      juntarFlores(flores)
+      mover
+  fin
+  proceso avanzarP(ES papeles: numero; E cant: numero)
+  comenzar
+    repetir cant
+      juntarPapeles(papeles)
+      mover
+  fin
+  proceso avanzarFYP(ES flores: numero; ES papeles: numero; E cant: numero)
+  comenzar
+    repetir cant
+      juntarFlores(flores)
+      juntarPapeles(papeles)
+      mover
+  fin
+  proceso esquinaPeligrosaP(ES papeles:numero;E av:numero; E ca:numero)
+  comenzar
+    juntarPapeles(papeles)
+    BloquearEsquina(av,ca)
+    mover
+    juntarPapeles(papeles)
+    mover
+    LiberarEsquina(av,ca)
+  fin
+  proceso esquinaPeligrosaF(ES flores: numero;E av: numero; E ca:numero)
+  comenzar
+    juntarFlores(flores)
+    BloquearEsquina(av,ca)
+    mover
+    juntarFlores(flores)
+    mover
+    LiberarEsquina(av,ca)
+  fin
+  proceso esquinaPeligrosaFYP(ES flores: numero;ES papeles: numero; E av: numero; E ca:numero)
+  comenzar
+    juntarFlores(flores)
+    juntarPapeles(papeles)
+    BloquearEsquina(av,ca)
+    mover
+    juntarFlores(flores)
+    juntarPapeles(papeles)
+    mover
+    LiberarEsquina(av,ca)
+  fin
+  proceso darseVuelta
+  comenzar
+    repetir 2
+      derecha
+  fin
+  proceso caP(E ca: numero)
+  comenzar
+    Pos(1, ca)
+    darseVuelta
+    mientras ((HayPapelEnLaBolsa) & (PosAv < 100))
+      depositarPapel
+      mover
+    si((PosAv=100)&(HayPapelEnLaBolsa))
+      depositarPapel
+  fin
+  proceso caF(E ca: numero)
+  comenzar
+    Pos(1, ca)
+    darseVuelta
+    mientras((HayFlorEnLaBolsa)&(PosAv < 100))
+      depositarFlor
+      mover
+    si((PosAv=100)&(HayFlorEnLaBolsa))
+      depositarFlor
+  fin
+  proceso caFYP(E ca: numero)
+  comenzar
+    Pos(1, ca)
+    darseVuelta
+    mientras ((HayFlorEnLaBolsa | HayPapelEnLaBolsa)  & (PosAv < 100))
+      si(HayFlorEnLaBolsa)
+        depositarFlor
+      si(HayPapelEnLaBolsa)
+        depositarPapel
+      mover
+    si(PosAv=100)
+      si(HayFlorEnLaBolsa)
+        depositarFlor
+      si(HayPapelEnLaBolsa)
+        depositarPapel
+  fin
+areas
+  general:AreaPC(2,2,16,16)
+  areaJ:AreaP(1,1,1,1)
+  carrera:AreaPC(1,20,100,22)
+robots
+  robot robot1
+  variables
+    n,flores,ca: numero
+  comenzar
+    flores:= 0
+    RecibirMensaje(n, rJ)
+    avanzarF(flores,6)
+    derecha
+    avanzarF(flores,2)
+    esquinaPeligrosaF(flores,5,8)
+    avanzarF(flores,2)
+    derecha
+    avanzarF(flores,2)
+    esquinaPeligrosaF(flores,8,5)
+    avanzarF(flores,2)
+    derecha
+    avanzarF(flores,6)
+    EnviarMensaje(n,rJ)
+    RecibirMensaje(ca,rJ)
+    caF(ca)
+  fin
+  robot robot2
+  variables
+    n,flores,papeles,ca: numero
+  comenzar
+    papeles:= 0
+    flores:= 0
+    RecibirMensaje(n, rJ)
+    avanzarFYP(flores,papeles,2)
+    esquinaPeligrosaFYP(flores,papeles,5,8)
+    avanzarFYP(flores,papeles,6)
+    derecha
+    avanzarFYP(flores,papeles,3)
+    esquinaPeligrosaFYP(flores,papeles,9,15)
+    avanzarFYP(flores,papeles,5)
+    derecha
+    avanzarFYP(flores,papeles,5)
+    esquinaPeligrosaFYP(flores,papeles,15,9)
+    avanzarFYP(flores,papeles,3)
+    derecha
+    avanzarFYP(flores,papeles,6)
+    esquinaPeligrosaFYP(flores,papeles,8,5)
+    avanzarFYP(flores,papeles,2)
+    EnviarMensaje(n,rJ)
+    RecibirMensaje(ca,rJ)
+    caFYP(ca)
+  fin
+  robot robot3
+  variables
+    n,papeles,ca: numero
+  comenzar
+    papeles:= 0
+    RecibirMensaje(n, rJ)
+    avanzarP(papeles,5)
+    esquinaPeligrosaP(papeles,9,15)
+    avanzarP(papeles,0)
+    derecha
+    avanzarP(papeles,7)
+    derecha
+    avanzarP(papeles,7)
+    derecha
+    avanzarP(papeles,0)
+    esquinaPeligrosaP(papeles,15,9)
+    avanzarP(papeles,5)
+    EnviarMensaje(n,rJ)
+    RecibirMensaje(ca,rJ)
+    caP(ca)
+  fin
+  robot jefe
+  variables
+    calle, n: numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    calle:= 20
+    repetir 3
+      RecibirMensaje(n,*)
+      si (n=1)
+        EnviarMensaje(calle,r1)
+      sino
+        si(n=2)
+          EnviarMensaje(calle,r2)
+        sino
+          EnviarMensaje(calle,r3)
+      calle:= calle+1
+  fin
+variables
+  r1:robot1
+  r2:robot2
+  r3:robot3
+  rJ:jefe
+comenzar
+  AsignarArea(r1,general)
+  AsignarArea(r1,carrera)
+  AsignarArea(r2,general)
+  AsignarArea(r2,carrera)
+  AsignarArea(r3,general)
+  AsignarArea(r3,carrera)
+  AsignarArea(rJ,areaJ)
+  Iniciar(r1,2,2)
+  Iniciar(r2,5,5)
+  Iniciar(r3,9,9)
+  Iniciar(rJ,1,1)
+fin
+{6.a- Tres robots deben recorrer el perímetro de su cuadrante, como se indica a continuación: El robot 1 comienza la esquina (2,2) y debe realizar un cuadrante de
+6x6 juntando todas las flores que encuentre. El robot 2 comienza en la esquina (5,5) y debe realizar un cuadrante de 10x10 juntando todas las flores y los papeles
+que encuentre.El robot 3 comienza en la esquina (9,9) y debe realizar un cuadrante de 7x7 juntando todos los papeles que encuentre. Cada robot que finalice su 
+cuadrante deberá avisar al robot fiscalizador. Al recibir el aviso, el robot fiscalizador indicará inmediatamente una calle a la que deberá dirigirse el robot 
+recolector, considerando que el robot que finalizó primero irá a la calle 20, el segundo a la 21 y el tercero a la 22. Cuando los robots recolectores reciben un 
+número de calle, deberán posicionarse en la avenida 1 de dicha calle, y avanzar a lo largo de la calle depositando en cada esquina un papel, una flor o ambos, 
+según lo que cada robot haya juntado. El recorrido finalizará al completar la calle o vaciarse las bolsas.
