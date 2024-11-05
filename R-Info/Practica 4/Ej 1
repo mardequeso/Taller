@@ -8,18 +8,15 @@ procesos
       mover
   fin
   proceso juntarFlores(E cant: numero)
-  variables
-    listo: boolean
   comenzar
-    RecibirMensaje(listo, rJ)
     Pos(PosAv, PosCa+1)
     repetir cant
       tomarFlor
     Pos(PosAv,PosCa-1)
   fin
-  proceso pedirFlores(E cant: numero; E ca: numero)
+  proceso pedirFlores(E cant: numero; E av:numero; E ca: numero)
   comenzar
-    EnviarMensaje(PosAv,rJ)
+    EnviarMensaje(av,rJ)
     EnviarMensaje(ca,rJ)
     EnviarMensaje(cant,rJ)
   fin
@@ -38,12 +35,15 @@ areas
 robots
   robot cliente
   variables
-    cant, ca: numero
+    cant,av, ca: numero
+    listo:boolean
   comenzar
+    av:= PosAv
     mientras(PosCa<100)
       ca:= PosCa+1
       Random(cant,1,4)
-      pedirFlores(cant,ca)
+      pedirFlores(cant,av,ca)
+      RecibirMensaje(listo, rJ)
       juntarFlores(cant)
       dejarFlores(cant)
       EnviarMensaje(V,rJ)
@@ -53,7 +53,7 @@ robots
     sino
       ca:= PosCa-1
       Random(cant,1,4)
-      pedirFlores(cant,ca)
+      pedirFlores(cant,av,ca)
       RecibirMensaje(listo, rJ)
       Pos(PosAv, PosCa-1)
       repetir cant
@@ -76,22 +76,22 @@ robots
       si(av=1)
         RecibirMensaje(ca,r1)
         RecibirMensaje(cant,r1)
-        dejarlesFlores(av,ca,cant)
+        dejarleFlores(av,ca,cant)
         EnviarMensaje(V,r1)
-        EnviarMensaje(sigue1,r1)
+        RecibirMensaje(sigue1,r1)
       sino
         si(av=2)
           RecibirMensaje(ca,r2)
           RecibirMensaje(cant,r2)
-          dejarlesFlores(av,ca,cant)
+          dejarleFlores(av,ca,cant)
           EnviarMensaje(V,r2)
-          EnviarMensaje(sigue2,r2)
+          RecibirMensaje(sigue2,r2)
         sino
           RecibirMensaje(ca,r3)
           RecibirMensaje(cant,r3)
-          dejarlesFlores(av,ca,cant)
+          dejarleFlores(av,ca,cant)
           EnviarMensaje(V,r3)
-          EnviarMensaje(sigue3,r3)
+          RecibirMensaje(sigue3,r3)
   fin
 variables
   r1,r2,r3:cliente
