@@ -9,7 +9,7 @@ procesos
   fin
   proceso juntarFlores(E cant: numero)
   comenzar
-    Pos(PosAv, PosCa+1)
+    mover
     repetir cant
       tomarFlor
     Pos(PosAv,PosCa-1)
@@ -17,8 +17,8 @@ procesos
   proceso pedirFlores(E cant: numero; E av:numero; E ca: numero)
   comenzar
     EnviarMensaje(av,rJ)
-    EnviarMensaje(ca,rJ)
     EnviarMensaje(cant,rJ)
+    EnviarMensaje(ca,rJ)
   fin
   proceso dejarleFlores(E av:numero; E ca:numero; E cant:numero)
   comenzar
@@ -46,7 +46,6 @@ robots
       RecibirMensaje(listo, rJ)
       juntarFlores(cant)
       dejarFlores(cant)
-      EnviarMensaje(V,rJ)
     si(cant>0)
       depositarFlor
       cant:= cant-1
@@ -61,37 +60,39 @@ robots
       Pos(PosAv,PosCa+1)
       depositarFlor
       cant:= cant-1
-    EnviarMensaje(F,rJ)
+    EnviarMensaje(av,rJ)
+    EnviarMensaje(0,rJ)
   fin
   robot jefe
   variables
-    sigue1,sigue2,sigue3: boolean
-    av,ca,cant:numero
+    ceros,av,ca,cant:numero
   comenzar
-    sigue1:= V
-    sigue2:= V
-    sigue3:= V
-    mientras (sigue1|sigue2|sigue3)
+    ceros:= 0
+    mientras (ceros<3)
       RecibirMensaje(av,*)
       si(av=1)
-        RecibirMensaje(ca,r1)
         RecibirMensaje(cant,r1)
-        dejarleFlores(av,ca,cant)
-        EnviarMensaje(V,r1)
-        RecibirMensaje(sigue1,r1)
       sino
         si(av=2)
-          RecibirMensaje(ca,r2)
           RecibirMensaje(cant,r2)
-          dejarleFlores(av,ca,cant)
-          EnviarMensaje(V,r2)
-          RecibirMensaje(sigue2,r2)
         sino
-          RecibirMensaje(ca,r3)
           RecibirMensaje(cant,r3)
+      si(cant=0)
+        ceros:=ceros+1
+      sino
+        si(av=1)
+          RecibirMensaje(ca,r1)
           dejarleFlores(av,ca,cant)
-          EnviarMensaje(V,r3)
-          RecibirMensaje(sigue3,r3)
+          EnviarMensaje(V,r1)
+        sino
+          si(av=2)
+            RecibirMensaje(ca,r2)
+            dejarleFlores(av,ca,cant)
+            EnviarMensaje(V,r2)
+          sino
+            RecibirMensaje(ca,r3)
+            dejarleFlores(av,ca,cant)
+            EnviarMensaje(V,r3)
   fin
 variables
   r1,r2,r3:cliente
@@ -109,4 +110,8 @@ comenzar
   Iniciar(r3,3,1)
   Iniciar(rJ,100,100)
 fin
-{Existe un robot que sirve de flores a tres robots clientes. Cada cliente solicita al servidor que le deposite en su esquina siguiente una cantidad de flores aleatoria (entre 1 y 4). Por ejemplo, si el cliente se encuentra en la esquina (2,1) le solicitar  que coloque x cantidad de flores en la esquina (2,2). Cuando el robot servidor deposita las flores en la esquina solicitada, el cliente las junta y las deposita una a una a lo largo de la avenida en la que se encuentra. El programa finaliza cuando todos los robos clientes completan su avenida. Asuma que el robot servidor tiene flores suficientes en su bolsa. El robot servidor se inicia en la esquina (100,100). Los robots clientes inician en las esquinas (1,1) , (2,1) y (3,1) respectivamente
+{Existe un robot que sirve de flores a tres robots clientes. Cada cliente solicita al servidor que le deposite en su esquina siguiente una cantidad de flores 
+aleatoria (entre 1 y 4). Por ejemplo, si el cliente se encuentra en la esquina (2,1) le solicitar  que coloque x cantidad de flores en la esquina (2,2). Cuando el
+robot servidor deposita las flores en la esquina solicitada, el cliente las junta y las deposita una a una a lo largo de la avenida en la que se encuentra. El 
+programa finaliza cuando todos los robos clientes completan su avenida. Asuma que el robot servidor tiene flores suficientes en su bolsa. El robot servidor se 
+inicia en la esquina (100,100). Los robots clientes inician en las esquinas (1,1) , (2,1) y (3,1) respectivamente
