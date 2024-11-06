@@ -1,11 +1,22 @@
 programa Ej2
 procesos 
   proceso juntarPapeles (ES papeles: numero)
+  variables
+    av,ca:numero
   comenzar
+    ca:=PosCa
+    av:=PosAv
     mientras(HayPapelEnLaEsquina)
       tomarPapel
       papeles:= papeles+1
-    
+      si(papeles=5)
+        BloquearEsquina(50,50)
+        Pos(50,50)
+        repetir papeles
+          depositarPapel
+        Pos(av,ca)
+        LiberarEsquina(50,50)
+        papeles:=0
   fin
   proceso recorrerAvenida
   variables
@@ -17,5 +28,69 @@ procesos
       mover
     juntarPapeles(papeles)
   fin
-  
-{Existen dos robots productores que recorren las avenidas 5 y 10 respectivamente, juntando todos los papeles de su avenida. A lo largo del recorrido, cada vez que juntan 5 papeles, los depositan en la esquina (50,50).Además existen dos robots consumidores que intentan tomar una cantidad aleatoria de papeles (entre 2 y 5) de la esquina (50,50) para depositarla en su esquina de origen. Si la esquina (50,50) no posee la cantidad de papeles requerida, vuelven a su esquina de origen sin tomar ningún papel. Si luego de 8 intentos seguidos un consumidor detecta que la esquina (50,50) no tiene papeles suficientes para juntar, entonces asumirá que los productores ya han completado su trabajo y por lo tanto terminará su tarea también. Los consumidores inician en las esquinas (11,1) y (12,1) respectivamente
+  proceso tomarPapeles(ES papeles:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=0
+    mientras((HayPapelEnLaEsquina)&(papeles>cant))
+      tomarPapel
+      cant:=cant+1
+    si(papeles>cant)
+      repetir cant
+        depositarPapel
+      papeles:=0
+  fin
+areas
+  areaP1:AreaP(5,1,5,100)
+  areaP2:AreaP(10,1,10,100)
+  areaC1:AreaP(11,1,11,1)
+  areaC2:AreaP(12,1,12,1)
+  general:AreaC(50,50,50,50)
+robots
+  robot productor
+  comenzar
+    recorrerAvenida
+  fin
+  robot consumidor
+  variables
+    av,ca,papeles,ceros:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    ceros:=0
+    mientras(ceros<8)
+      Random(papeles,2,5)
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      tomarPapeles(papeles)
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+      si(papeles=0)
+        ceros:=ceros+1
+      sino
+        repetir papeles
+          depositarPapel
+  fin
+variables
+  P1,P2:productor
+  C1,C2:consumidor
+comenzar
+  AsignarArea(P1,areaP1)
+  AsignarArea(P1,general)
+  AsignarArea(P2,areaP2)
+  AsignarArea(P2,general)
+  AsignarArea(C1,areaC1)
+  AsignarArea(C1,general)
+  AsignarArea(C2,areaC2)
+  AsignarArea(C2,general)
+  Iniciar(P1,5,1)
+  Iniciar(P2,10,1)
+  Iniciar(C1,11,1)
+  Iniciar(C2,12,1)
+fin
+{Existen dos robots productores que recorren las avenidas 5 y 10 respectivamente, juntando todos los papeles de su avenida. A lo largo del recorrido, cada vez que
+juntan 5 papeles, los depositan en la esquina (50,50). Además existen dos robots consumidores que intentan tomar una cantidad aleatoria de papeles (entre 2 y 5) de
+la esquina (50,50) para depositarla en su esquina de origen. Si la esquina (50,50) no posee la cantidad de papeles requerida, vuelven a su esquina de origen sin
+tomar ningún papel. Si luego de 8 intentos seguidos un consumidor detecta que la esquina (50,50) no tiene papeles suficientes para juntar, entonces asumirá que los
+productores ya han completado su trabajo y por lo tanto terminará su tarea también. Los consumidores inician en las esquinas (11,1) y (12,1) respectivamente.
