@@ -71,6 +71,7 @@ robots
       sino
         repetir papeles
           depositarPapel
+        ceros:=0
   fin
 variables
   P1,P2:productor
