@@ -1,10 +1,21 @@
 programa Ej3
 procesos
+  proceso juntarPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
   proceso etapa(E n:numero)
   comenzar
-    repetir n
-      mientras(HayPapelEnLaEsquina)
-        tomarPapel
+    si((100-PosCa)>=n)
+      repetir n
+        juntarPapeles
+        mover
+    sino
+      repetir(100-PosCa)
+        juntarPapeles
+        mover
+      juntarPapeles
   fin
 areas
   area1:AreaP(1,1,1,100)
@@ -14,10 +25,76 @@ areas
 robots
   robot recolector
   variables
-  
+    id:numero
+    seguir,termine:boolean
   comenzar
-    mientras(PosCa<100 )
-  fin 
+    RecibirMensaje(id,rJ)
+    mientras(PosCa<100)
+      EnviarMensaje(id,rJ)
+      EnviarMensaje(V,rJ)
+      RecibirMensaje(seguir,rJ)
+      etapa(5)
+    EnviarMensaje(F,rJ)
+  fin
+  robot jefe
+  variables
+    barrera,terminaron,r:numero
+    ok1,ok2,ok3:boolean
+  comenzar
+    terminaron:=0
+    barrera:=0
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    ok1:=V
+    ok2:=V
+    ok3:=V
+    mientras(terminaron<3)
+      RecibirMensaje(r,*)
+      si(r=1)
+        si(ok1)
+          RecibirMensaje(ok1,r1)
+          si(ok1=F)
+            terminaron:=terminaron+1
+          sino
+            barrera:=barrera+1
+      sino
+        si(r=2)
+          si(ok2)
+            RecibirMensaje(ok2,r2)
+            si(ok2=F)
+              terminaron:=terminaron+1
+            sino
+              barrera:=barrera+1
+        sino
+          si(ok3)
+            RecibirMensaje(ok3,r3)
+            si(ok3=F)
+              terminaron:=terminaron+1
+            sino
+              barrera:=barrera+1
+      si(barrera+terminaron=3)
+        si(ok1)
+          EnviarMensaje(V,r1)
+        si(ok2)
+          EnviarMensaje(V,r2)
+        si(ok3)
+          EnviarMensaje(V,r3)
+        barrera:=0
+  fin
+variables
+  r1,r2,r3: recolector
+  rJ:jefe
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r2,area2)
+  AsignarArea(r3,area3)
+  AsignarArea(rJ,areaJ)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+  Iniciar(rJ,100,100)
+fin
 {Tres robots deben vaciar de papeles su avenida, comenzando por la calle 1 y terminando en la calle 100. El trabajo lo deben realizar todos juntos y en etapas: los robots inician juntos y cuando todos completan una etapa del trabajo pueden avanzar a la siguiente, lo que significa que para poder pasar de etapa los robots deben esperar que todos hayan completado la etapa en curso. Se proponen dos posibles soluciones a este problema: etapas homogéneas o etapas heterogéneas:
 {a) Implemente el programa considerando que cada robot completa una etapa cada 5 esquinas
 {Los robots inician en las esquinas (1,1), (2,1) y (3,1) respectivamente. Existe un robot coordinador, cuya única tarea es asignar identificadores a cada robot.
