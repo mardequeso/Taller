@@ -1,0 +1,130 @@
+programa Ej3
+procesos
+  proceso juntarPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso etapa(E n:numero)
+  variables
+    flores,av,ca:numero
+  comenzar
+    flores:=0
+    si((100-PosCa)>=n)
+      repetir n
+        juntarPapeles
+        juntarFlores(flores)
+        mover
+    sino
+      repetir(100-PosCa)
+        juntarPapeles
+        juntarFlores(flores)
+        mover
+      juntarPapeles
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir flores
+      depositarFlor
+    flores:=0
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  area1:AreaP(1,1,100,1)
+  area2:AreaP(1,2,100,2)
+  area3:AreaP(1,3,100,3)
+  areaJ:AreaP(1,4,1,4)
+  general:AreaC(50,50,50,50)
+robots
+  robot recolector
+  variables
+    id:numero
+    seguir,termine:boolean
+  comenzar
+    derecha
+    RecibirMensaje(id,rJ)
+    mientras(PosCa<100)
+      EnviarMensaje(id,rJ)
+      EnviarMensaje(V,rJ)
+      RecibirMensaje(seguir,rJ)
+      etapa(10)
+    EnviarMensaje(F,rJ)
+  fin
+  robot jefe
+  variables
+    barrera,terminaron,r,flores:numero
+    ok1,ok2,ok3:boolean
+  comenzar
+    terminaron:=0
+    barrera:=0
+    flores:=0
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    ok1:=V
+    ok2:=V
+    ok3:=V
+    mientras(terminaron<3)
+      RecibirMensaje(r,*)
+      si(r=1)
+        si(ok1)
+          RecibirMensaje(ok1,r1)
+          si(ok1=F)
+            terminaron:=terminaron+1
+          sino
+            barrera:=barrera+1
+      sino
+        si(r=2)
+          si(ok2)
+            RecibirMensaje(ok2,r2)
+            si(ok2=F)
+              terminaron:=terminaron+1
+            sino
+              barrera:=barrera+1
+        sino
+          si(ok3)
+            RecibirMensaje(ok3,r3)
+            si(ok3=F)
+              terminaron:=terminaron+1
+            sino
+              barrera:=barrera+1
+      si(barrera+terminaron=3)
+        si(ok1)
+          EnviarMensaje(V,r1)
+        si(ok2)
+          EnviarMensaje(V,r2)
+        si(ok3)
+          EnviarMensaje(V,r3)
+        barrera:=0
+    Pos(50,50)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+    Informar("flores ",flores)
+  fin
+variables
+  r1,r2,r3: recolector
+  rJ:jefe
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r2,area2)
+  AsignarArea(r3,area3)
+  AsignarArea(rJ,areaJ)
+  AsignarArea(r1,general)
+  AsignarArea(r2,general)
+  AsignarArea(r3,general)
+  AsignarArea(rJ,general)
+  Iniciar(r1,1,1)
+  Iniciar(r2,1,2)
+  Iniciar(r3,1,3)
+  Iniciar(rJ,1,4)
+fin
+{2- Tres robots recolectores deben avanzar por su calle vaciando las esquinas. El avance debe realizarse en conjunto en etapas, siguiendo el modelo de sincronización barrera, en el cual los robots deben esperar que todos terminen su tarea antes de avanzar a la siguiente etapa. Cada etapa consiste en recorrer 10 esquinas y luego depositar todas las flores recolectadas en la esquina (50,50). Una vez que los robots recolectores completaron toda su calle, un robot fiscalizador deberá juntar todas las flores de la esquina (50,50) e informar la cantidad total de flores juntadas. Los robots recolectores inician en las esquinas (1,1), (1,2) y (1,3) respectivamente. El robot fiscalizador inicia en la esquina (1,4).
