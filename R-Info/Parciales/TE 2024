@@ -17,7 +17,7 @@ procesos
     repetir 4
       lado(largo,flores)
       derecha
-    esquinas:=esquinas+largo+largo+largo+largo
+    esquinas:=esquinas+largo*4
   fin
   proceso dejarFlores(ES flores:numero;E av:numero;E ca:numero)
   comenzar
