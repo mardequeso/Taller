@@ -1,0 +1,110 @@
+programa Ej4
+procesos
+  proceso juntarFlores(ES flores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+areas
+  area1:AreaP(1,1,1,1)
+  area2:AreaP(2,1,2,1)
+  area3:AreaP(3,1,3,1)
+  areaJ:AreaP(4,1,4,1)
+  cuadrante:AreaPC(40,40,60,60)
+  general:AreaPC(10,10,10,10)
+robots
+  robot florero
+  variables
+    n,flores,avO,caO,av,ca:numero
+    sigo:boolean
+  comenzar
+    flores:=0
+    avO:=PosAv
+    caO:=PosCa
+    RecibirMensaje(n,rJ)
+    RecibirMensaje(sigo,rJ)
+    mientras(sigo)
+      RecibirMensaje(av,rJ)
+      RecibirMensaje(ca,rJ)
+      BloquearEsquina(av,ca)
+      Pos(av,ca)
+      juntarFlores(flores)
+      Pos(avO,caO)
+      LiberarEsquina(av,ca)
+      RecibirMensaje(sigo,rJ)
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    repetir flores
+      depositarFlor
+    Pos(avO,caO)
+    LiberarEsquina(10,10)
+    EnviarMensaje(n,rJ)
+    EnviarMensaje(flores,rJ)
+    flores:=0
+  fin
+  robot jefe
+  variables
+    flores,floresTot,av,ca,r:numero  
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    floresTot:=0
+    repetir 8
+      Random(r,1,3)
+      Random(av,40,60)
+      Random(ca,40,60)
+      si(r=1)
+        EnviarMensaje(V,r1)
+        EnviarMensaje(av,r1)
+        EnviarMensaje(ca,r1)
+      sino
+        si(r=2)
+          EnviarMensaje(V,r2)
+          EnviarMensaje(av,r2)
+          EnviarMensaje(ca,r2)
+        sino
+          EnviarMensaje(V,r3)
+          EnviarMensaje(av,r3)
+          EnviarMensaje(ca,r3)
+    EnviarMensaje(F,r1)
+    EnviarMensaje(F,r2)
+    EnviarMensaje(F,r3)
+    repetir 3
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(flores,r1)
+        floresTot:=floresTot+flores
+      sino
+        si(r=2)
+          RecibirMensaje(flores,r2)
+          floresTot:=floresTot+flores
+        sino
+          RecibirMensaje(flores,r3)
+          floresTot:=floresTot+flores
+    Informar("la cantidad total de flores fue ",floresTot)
+  fin
+variables
+  r1,r2,r3:florero
+  rJ:jefe
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r1,cuadrante)
+  AsignarArea(r1,general)
+  AsignarArea(r2,area2)
+  AsignarArea(r2,cuadrante)
+  AsignarArea(r2,general)
+  AsignarArea(r3,area3)
+  AsignarArea(r3,cuadrante)
+  AsignarArea(r3,general)
+  AsignarArea(rJ,areaJ)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+  Iniciar(rJ,4,1)
+fin
+{4- Tres robots floreros tienen 8 intentos en total para juntar todas las flores dentro del cuadrante comprendido entre las esquinas (40,40) y (60,60). Para ello, 
+en cada intento un robot fiscalizador indicará a un robot aleatorio la esquina a la que debe dirigirse. El fiscalizador calculará esta esquina de manera aleatoria.
+Al completarse los 8 intentos, los robots floreros deberán depositar todas las flores juntadas en la esquina (10,10), y el robot fiscalizador deberá informar la 
+cantidad total de flores juntadas por los robots. Los robots floreros inician en las esquinas (1,1), (2,1) y (3,1) respectivamente, y el fiscalizador en la (4,1).
