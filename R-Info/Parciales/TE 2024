@@ -1,0 +1,93 @@
+programa parcialE
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso lado(E largo:numero;ES flores:numero)
+  comenzar
+    repetir largo
+      juntarFlores(flores)
+      mover
+  fin
+  proceso cuadrado(ES esquinas:numero; ES flores:numero; E largo:numero)
+  comenzar
+    repetir 4
+      lado(largo,flores)
+      derecha
+    esquinas:=esquinas+largo+largo+largo+largo
+  fin
+  proceso dejarFlores(ES flores:numero;E av:numero;E ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir flores
+      depositarFlor
+    flores:=0
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  area1:AreaP(1,1,5,15)
+  area2:AreaP(7,1,11,15)
+  area3:AreaP(14,1,18,15)
+  areaJ:AreaP(51,51,51,51)
+  general:AreaPC(50,50,50,50)
+robots
+  robot recolector
+  variables
+    n,flores,esquinas,largo:numero
+  comenzar
+    flores:=0
+    esquinas:=0
+    RecibirMensaje(n,rJ)
+    repetir 2
+      Random(largo,1,4)
+      cuadrado(esquinas,flores,largo)
+      dejarFlores(flores,(PosAv),(PosCa+largo+1))
+    Random(largo,1,4)
+    cuadrado(esquinas,flores,largo)
+    dejarFlores(flores,PosAv,PosCa)
+    EnviarMensaje(n,rJ)
+    EnviarMensaje(esquinas,rJ)
+  fin
+  robot jefe
+  variables
+    r,esquinas,max,rMax:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    max:=0
+    repetir 3
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(esquinas,r1)
+      sino
+        si(r=2)
+          RecibirMensaje(esquinas,r2)
+        sino
+          RecibirMensaje(esquinas,r3)
+      si(esquinas>max)
+        max:=esquinas
+        rMax:=r
+    Informar("el que junto mas flores fue el ",rMax)
+  fin
+variables
+  r1,r2,r3:recolector
+  rJ:jefe
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r1,general)
+  AsignarArea(r2,area2)
+  AsignarArea(r2,general)
+  AsignarArea(r3,area3)
+  AsignarArea(r3,general)
+  AsignarArea(rJ,areaJ)
+  Iniciar(r1,1,1)
+  Iniciar(r2,7,1)
+  Iniciar(r3,14,1)
+  Iniciar(rJ,51,51)
+fin
