@@ -1,0 +1,91 @@
+programa parcialE
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso lado(E largo:numero;ES flores:numero)
+  comenzar
+    repetir largo
+      juntarFlores(flores)
+      mover
+  fin
+  proceso cuadrado(ES flores:numero;E n:numero)
+  variables
+    largo:numero
+  comenzar
+    RecibirMensaje(largo,rJ)
+    repetir 4
+      lado(largo,flores)
+      derecha
+    Pos(PosAv,(PosCa+largo+1))
+  fin
+  proceso dejarFlores(ES flores:numero;E av:numero;E ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir flores
+      depositarFlor
+    flores:=0
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  area1:AreaP(1,1,6,19)
+  area2:AreaP(8,1,13,19)
+  area3:AreaP(15,1,20,19)
+  areaJ:AreaP(22,1,22,1)
+  general:AreaC(50,50,50,50)
+robots
+  robot recolector
+  variables
+    n,flores:numero
+  comenzar
+    flores:=0
+    RecibirMensaje(n,rJ)
+    repetir 3
+      cuadrado(flores,n)
+    dejarFlores(flores,PosAv,PosCa)
+    EnviarMensaje(V,rJ)
+  fin
+  robot jefe
+  variables
+    r,flores,largo:numero
+    terminaron:boolean
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    flores:=0
+    repetir 3
+      Random(largo,1,5)
+      EnviarMensaje(largo,r1)
+      Random(largo,1,5)
+      EnviarMensaje(largo,r2)
+      Random(largo,1,5)
+      EnviarMensaje(largo,r3)
+    repetir 3
+      RecibirMensaje(terminaron,*)
+    Pos(50,50)
+    juntarFlores(flores)
+    Informar("la cantidad de flores juntadas es ",flores)
+  fin
+variables
+  r1,r2,r3:recolector
+  rJ:jefe
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r1,general)
+  AsignarArea(r2,area2)
+  AsignarArea(r2,general)
+  AsignarArea(r3,area3)
+  AsignarArea(r3,general)
+  AsignarArea(rJ,areaJ)
+  AsignarArea(rJ,general)
+  Iniciar(r1,1,1)
+  Iniciar(r2,8,1)
+  Iniciar(r3,15,1)
+  Iniciar(rJ,22,1)
+fin
