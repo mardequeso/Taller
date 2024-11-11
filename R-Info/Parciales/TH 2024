@@ -1,0 +1,129 @@
+programa parcialH
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso lado(ES flores:numero; E largo:numero)
+  comenzar
+    repetir largo
+      juntarFlores(flores)
+      mover
+    derecha
+  fin
+  proceso cuadrado(E largo:numero;E n:numero)
+  variables
+    flores,av,ca:numero
+  comenzar
+    flores:=0
+    av:=PosAv
+    ca:=PosCa
+    repetir 4
+      lado(flores,largo)
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir flores
+      depositarFlor
+    Pos(av,(ca+largo+1))
+    LiberarEsquina(50,50)
+    EnviarMensaje(n,rJ)
+    EnviarMensaje(flores,rJ)
+  fin
+  proceso enviarLargo
+  variables
+    largo:numero
+  comenzar
+    Random(largo,1,6)
+    EnviarMensaje(1,r1)
+    EnviarMensaje(largo,r1)
+    Random(largo,1,6)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(largo,r2)
+    Random(largo,1,6)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(largo,r3)
+  fin
+  proceso buscarFlores(E av:numero;E ca:numero;E flores:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir flores
+      tomarFlor
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+  proceso buscarMax(E flores:numero;E r:numero;ES max:numero;ES rMax:numero)
+  comenzar
+    si(flores>=max)
+      max:=flores
+      rMax:=r
+  fin
+areas
+  area1:AreaP(1,1,7,22)
+  area2:AreaP(10,1,16,22)
+  area3:AreaP(20,1,26,22)
+  areaJ:AreaP(100,100,100,100)
+  general:AreaC(50,50,50,50)
+robots
+  robot recolector
+  variables
+    largo,n:numero
+  comenzar
+    RecibirMensaje(n,rJ)
+    RecibirMensaje(largo,rJ)
+    repetir 3
+      cuadrado(largo,n)
+  fin
+  robot coordinador
+  variables
+    r,f1,f2,f3,flores,av,ca,max,rMax:numero
+  comenzar
+    enviarLargo
+    f1:=0
+    f2:=0
+    f3:=0
+    max:=0
+    av:=PosAv
+    ca:=PosCa
+    repetir 9
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(flores,r1)
+        f1:=f1+flores
+      sino
+        si(r=2)
+          RecibirMensaje(flores,r2)
+          f2:=f2+flores
+        sino
+          RecibirMensaje(flores,r3)
+          f3:=f3+flores
+      buscarFlores(av,ca,flores)
+    buscarMax(f1,1,max,rMax)
+    buscarMax(f2,2,max,rMax)
+    buscarMax(f3,3,max,rMax)
+    Informar("El que junto mas flores fue el ",rMax)
+  fin
+variables
+  r1,r2,r3:recolector
+  rJ:coordinador
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r1,general)
+  AsignarArea(r2,area2)
+  AsignarArea(r2,general)
+  AsignarArea(r3,area3)
+  AsignarArea(r3,general)
+  AsignarArea(rJ,areaJ)
+  AsignarArea(rJ,general)
+  Iniciar(r1,1,1)
+  Iniciar(r2,10,1)
+  Iniciar(r3,20,1)
+  Iniciar(rJ,100,100)
+fin
+{Tres robots recolectores deben realizar 3 cuadrados cada uno, como se ejemplifica en la figura, juntando todas las flores que encuentran a su paso. Inicialmente,
+un robot coordinador deberá informar a cada recolector el tamaño de los cuadrados a realizar (calculado aleatoriamente entre 1 y 6). Al completar cada cuadrado, 
+los recolectores deberán depositar de a una en la esquina (50,50) las flores encontradas y luego avisar al coordinador para que recoja las flores recién 
+depositadas. Una vez que todos los recolectores completaron sus tareas, el coordinador deberá informar cuál fue el que recolectó más flores. Los recolectores
+inician en las esquinas (1,1) y (10,1), (20,1) y el coordinador en la esquina (100,100).
