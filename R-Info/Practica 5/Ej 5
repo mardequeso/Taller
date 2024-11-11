@@ -26,13 +26,12 @@ robots
     repetir 4
       EnviarMensaje(n,rJ)
       RecibirMensaje(papeles,rJ)
-      BloquearEsquina(100,1)
-      Pos(100,1)
       repetir papeles
+        BloquearEsquina(100,1)
+        Pos(100,1)
         tomarPapel
-      Pos(av,ca)
-      LiberarEsquina(100,1)
-      repetir papeles
+        Pos(av,ca)
+        LiberarEsquina(100,1)
         depositarPapel
   fin
   robot servidor
