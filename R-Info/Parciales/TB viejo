@@ -1,0 +1,126 @@
+programa parcialX
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso areaSegura(E cant:numero;ES flores:numero)
+  comenzar
+    repetir cant
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+  proceso avenida(E ca:numero;E id:numero)
+  variables
+    flores:numero
+  comenzar
+    flores:=0
+    areaSegura((ca-2),flores)
+    BloquearEsquina(6,ca)
+    mover
+    juntarFlores(flores)
+    mover
+    LiberarEsquina(6,ca)
+    areaSegura((60-ca),flores)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(flores,rJ)
+  fin
+  proceso calle(E ca:numero;E id:numero)
+  variables
+    flores:numero
+  comenzar
+    derecha
+    flores:=0
+    areaSegura(4,flores)
+    BloquearEsquina(6,ca)
+    mover
+    juntarFlores(flores)
+    mover
+    LiberarEsquina(6,ca)
+    areaSegura(54,flores)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(flores,rJ)
+  fin
+areas
+  areaf1:AreaP(6,51,6,61)
+  areaIf2:AreaP(1,2,5,50)
+  areaIf1:AreaP(6,1,6,1)
+  areaf2:AreaP(7,2,61,50)
+  areaJ:AreaP(100,100,100,100)
+  general:AreaPC(6,2,6,50)
+robots
+  robot florero1
+  variables
+    id,ca:numero
+    gane:boolean
+  comenzar
+    RecibirMensaje(id,rJ)
+    RecibirMensaje(ca,rJ)
+    avenida(ca,id)
+    RecibirMensaje(gane,rJ)
+    si(gane)
+      Pos(6,1)
+  fin
+  robot florero2
+  variables
+    id,ca:numero
+    gane:boolean
+  comenzar
+    RecibirMensaje(id,rJ)
+    RecibirMensaje(ca,rJ)
+    si(ca>2)
+      Pos(1,ca)
+    calle(ca,id)
+    RecibirMensaje(gane,rJ)
+    si(gane)
+      Pos(1,2)
+  fin
+  robot jefe
+  variables
+    ca, r,flores,max,rMax:numero
+  comenzar
+    Random(ca,2,50)
+    EnviarMensaje(1,r1)
+    EnviarMensaje(ca,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(ca,r2)
+    max:=0
+    repetir 2
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(flores,r1)
+      sino
+        RecibirMensaje(flores,r2)
+      si(max<=flores)
+        max:=flores
+        rMax:=r
+    si(rMax=1)
+      EnviarMensaje(V,r1)
+      EnviarMensaje(F,r2)
+    sino
+      EnviarMensaje(F,r1)
+      EnviarMensaje(V,r2)
+  fin
+variables
+  r1:florero1
+  r2:florero2
+  rJ:jefe
+comenzar
+  AsignarArea(rJ,areaJ)
+  AsignarArea(r1,areaIf1)
+  AsignarArea(r1,areaf1)
+  AsignarArea(r1,general)
+  AsignarArea(r2,areaIf2)
+  AsignarArea(r2,areaf2)
+  AsignarArea(r2,general)
+  Iniciar(r1,6,1)
+  Iniciar(r2,1,2)
+  Iniciar(rJ,100,100)
+fin
+{Dos robots F1 y F2 deben dar 60 pasos juntando todas las flores. F1 debe avanzar por la avenida 6 comenzando en la esquina (6,1) y F2 por una calle X indicada por
+un fiscalizador (quien genera este valor de manera aleatoria entre 2 y 50) comenzando en la esquina (1,X). Al finalizar los recorridos de los floreros el 
+fiscalizador debe indicar qué robot llegó primero a la esquina de cruce y cuántas flores juntó dicho robot en todo su recorrido. F1 inicia en la esquina (6,1), F2 
+en (1,2) y el fiscalizador en (100,100)
