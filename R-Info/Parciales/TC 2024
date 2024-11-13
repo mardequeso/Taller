@@ -1,0 +1,162 @@
+programa parcialC
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  proceso areaSeguraF(E cant:numero;ES flores:numero)
+  comenzar
+    repetir cant
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+  proceso avenida(E ca:numero;E id:numero)
+  variables
+    av,flores:numero
+  comenzar
+    av:=PosAv
+    flores:=0
+    areaSeguraF((ca-2),flores)
+    BloquearEsquina(av,ca)
+    mover
+    juntarFlores(flores)
+    mover
+    LiberarEsquina(av,ca)
+    areaSeguraF((99-ca),flores)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(flores,rJ)
+  fin
+  proceso areaSeguraP(E cant:numero;ES papeles:numero)
+  comenzar
+    repetir cant
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+  fin
+  proceso areaPeligrosa(E av:numero;E ca:numero;ES papeles:numero)
+  comenzar
+    BloquearEsquina(av,ca)
+    mover
+    juntarPapeles(papeles)
+    mover
+    LiberarEsquina(av,ca)
+  fin
+  proceso calle(E ca:numero;E id:numero)
+  variables
+    papeles:numero
+  comenzar
+    derecha
+    papeles:=0
+    areaSeguraP(4,papeles)
+    areaPeligrosa(6,ca,papeles)
+    areaSeguraP(3,papeles)
+    areaPeligrosa(11,ca,papeles)
+    areaSeguraF(87,papeles)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(papeles,rJ)
+  fin
+areas
+  areaf1:AreaP(6,21,6,100)
+  areaf2:AreaP(11,21,11,100)
+  areaIf1:AreaP(6,1,6,1)
+  areaIf2:AreaP(11,1,11,1)
+  areap:AreaP(12,2,100,20)
+  areaIp:AreaP(1,2,5,20)
+  areaJ:AreaP(1,1,1,1)
+  general:AreaPC(6,2,11,20)
+robots
+  robot florero
+  variables
+    id,ca:numero
+    gane:boolean
+  comenzar
+    RecibirMensaje(id,rJ)
+    RecibirMensaje(ca,rJ)
+    avenida(ca,id)
+    RecibirMensaje(gane,rJ)
+    si(gane)
+      Pos(PosAv,1)
+  fin
+  robot papelero
+  variables
+    id,ca:numero
+    gane:boolean
+  comenzar
+    RecibirMensaje(id,rJ)
+    RecibirMensaje(ca,rJ)
+    si(ca>2)
+      Pos(1,ca)
+    calle(ca,id)
+    RecibirMensaje(gane,rJ)
+    si(gane)
+      Pos(1,2)
+  fin
+  robot jefe
+  variables
+    ca, r,cant,max,rMax:numero
+  comenzar
+    Random(ca,2,20)
+    EnviarMensaje(1,r1)
+    EnviarMensaje(ca,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(ca,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(ca,r3)
+    max:=0
+    repetir 3
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(cant,r1)
+      sino
+        si(r=2)
+          RecibirMensaje(cant,r2)
+        sino
+          RecibirMensaje(cant,r3)
+      si(max<=cant)
+        max:=cant
+        rMax:=r
+    si(rMax=1)
+      EnviarMensaje(V,r1)
+      EnviarMensaje(F,r2)
+      EnviarMensaje(F,r3)
+    sino
+      EnviarMensaje(F,r1)
+      si(rMax=2)
+        EnviarMensaje(V,r2)
+        EnviarMensaje(F,r3)
+      sino
+        EnviarMensaje(F,r2)
+        EnviarMensaje(V,r3)
+  fin
+variables
+  r1,r2:florero
+  r3:papelero
+  rJ:jefe
+comenzar
+  AsignarArea(rJ,areaJ)
+  AsignarArea(r1,areaIf1)
+  AsignarArea(r1,areaf1)
+  AsignarArea(r1,general)
+  AsignarArea(r2,areaIf2)
+  AsignarArea(r2,areaf2)
+  AsignarArea(r2,general)
+  AsignarArea(r3,areaIp)
+  AsignarArea(r3,areap)
+  AsignarArea(r3,general)
+  Iniciar(r1,6,1)
+  Iniciar(r2,11,1)
+  Iniciar(r3,1,2)
+  Iniciar(rJ,1,1)
+fin
+{Existen tres robots recolectores: dos floreros RF1 y RF2 que vacían de flores sus respectivas avenidas y un robot papelero RP que vacía de papeles una calle 
+aleatoria entre 2 y 20 indicada por un robot fiscalizador. Cuando los tres recolectores terminan su tarea, el fiscalizador debe indicarle al que haya recolectado
+más elementos que vuelva a su ubicación inicial. Las esquinas de inicio son: RF1 en (6,1), RF2 en (11,1), RP en (2,1) y el fiscalizador en (1,1)
