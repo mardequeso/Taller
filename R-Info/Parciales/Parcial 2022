@@ -143,7 +143,6 @@ robots
     max:=0
     repetir 2
       RecibirMensaje(r,*)
-      Informar("recibio",r)
       si(r=3)
         RecibirMensaje(flores,a3)
       sino
