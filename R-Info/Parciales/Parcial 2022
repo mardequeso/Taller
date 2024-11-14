@@ -95,7 +95,7 @@ robots
   fin
   robot centralA
   variables
-    flores,id:numero
+    flores,id,r:numero
     termino:boolean
   comenzar
     derecha
@@ -103,8 +103,8 @@ robots
     flores:=0
     repetir 10
       repetir 2
-        RecibirMensaje(id,*)
-        si(id=1)
+        RecibirMensaje(r,*)
+        si(r=1)
           RecibirMensaje(termino,a1)
         sino
           RecibirMensaje(termino,a2)
@@ -116,7 +116,7 @@ robots
   fin
   robot centralV
   variables
-    flores,id:numero
+    flores,id,r:numero
     termino:boolean
   comenzar
     izquierda
@@ -124,8 +124,8 @@ robots
     flores:=0
     repetir 10
       repetir 2
-        RecibirMensaje(id,*)
-        si(id=4)
+        RecibirMensaje(r,*)
+        si(r=4)
           RecibirMensaje(termino,v1)
         sino
           RecibirMensaje(termino,v2)
@@ -143,6 +143,7 @@ robots
     max:=0
     repetir 2
       RecibirMensaje(r,*)
+      Informar("recibio",r)
       si(r=3)
         RecibirMensaje(flores,a3)
       sino
