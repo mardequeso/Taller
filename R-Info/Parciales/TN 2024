@@ -1,0 +1,122 @@
+programa turnoN
+procesos
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso avanzar(E tamaño:numero; ES papeles:numero)
+  comenzar
+    repetir tamaño
+      juntarPapeles(papeles)
+      mover
+  fin
+  proceso escalon(E largo:numero;E ancho:numero;ES papeles:numero)
+  comenzar
+    avanzar(largo,papeles)
+    derecha
+    avanzar(ancho,papeles)
+    izquierda
+  fin
+  proceso dejarPapeles(E papeles:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(100,100)
+    Pos(100,100)
+    repetir papeles
+      depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(100,100)
+  fin
+  proceso enviarDatos
+  variables
+    ancho,largo:numero
+  comenzar
+    Random(ancho,1,3)
+    Random(largo,1,4)
+    EnviarMensaje(1,r1)
+    EnviarMensaje(ancho,r1)
+    EnviarMensaje(largo,r1)
+    Random(ancho,1,3)
+    Random(largo,1,4)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(ancho,r2)
+    EnviarMensaje(largo,r2)
+    Random(ancho,1,3)
+    Random(largo,1,4)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(ancho,r3)
+    EnviarMensaje(largo,r3)
+  fin
+areas
+  area1:AreaP(2,1,11,13)
+  area2:AreaP(32,1,41,13)
+  area3:AreaP(62,1,71,13)
+  areaJ:AreaP(1,1,1,1)
+  general:AreaPC(100,100,100,100)
+robots
+  robot papelero
+  variables
+    papeles,id,ancho,largo:numero
+  comenzar
+    RecibirMensaje(id,rJ)
+    RecibirMensaje(ancho,rJ)
+    RecibirMensaje(largo,rJ)
+    papeles:=0
+    repetir 3
+      escalon(largo, ancho, papeles)
+    juntarPapeles(papeles)
+    dejarPapeles(papeles)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(papeles,rJ)
+  fin
+  robot jefe
+  variables
+    r,papeles,rMax,max,ancho,largo:numero
+  comenzar
+    enviarDatos
+    max:=0
+    repetir 3
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(papeles,r1)
+      sino
+        si(r=2)
+          RecibirMensaje(papeles,r2)
+        sino
+          RecibirMensaje(papeles,r3)
+      si(papeles>=max)
+        max:=papeles
+        rMax:=r
+    Informar("quien junto mas papeles fue el ",rMax)
+  fin
+variables
+  r1,r2,r3:papelero
+  rJ:jefe
+comenzar
+  AsignarArea(rJ,areaJ)
+  AsignarArea(r1,area1)
+  AsignarArea(r1,general)
+  AsignarArea(r2,area2)
+  AsignarArea(r2,general)
+  AsignarArea(r3,area3)
+  AsignarArea(r3,general)
+  Iniciar(rJ,1,1)
+  Iniciar(r1,2,1)
+  Iniciar(r2,32,1)
+  Iniciar(r3,62,1)
+fin
+{Tres robots papeleros deben realizar 3 escalones cada uno juntando todos los papeles a su paso. El tamaño (alto y ancho) de los escalones que realizará cada robot
+será calculado al inicio por un robot fiscalizador de manera aleatoria entre 1 y 4 de alto, y entre 1 y 3 de ancho. Una vez finalizados los 3 escalones, cada 
+papelero deberá depositar de una sola vez todos los papeles juntados en el depósito localizado en la esquina (100,100), Cuando todos los robots finalizaron, el 
+fiscalizador deberá indicar qué robot juntó más papeles. El fiscalizador inicia en la esquina (1,1), y los robots papeleros inician en las esquinas (2,1), (32,1) y
+(62,1) respectivamente.
