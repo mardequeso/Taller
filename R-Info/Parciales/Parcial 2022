@@ -21,7 +21,7 @@ procesos
     repetir flores
       depositarFlor
     Pos(av,ca)
-    LiberarEsquina(av,ca)
+    LiberarEsquina(av,20)
   fin
   proceso laterales(E ca:numero)
   variables
@@ -42,13 +42,13 @@ procesos
     repetir flores
       depositarFlor
     Pos(av,20)
-    LiberarEsquina(av,20)
+    LiberarEsquina(20,20)
     EnviarMensaje(id,rJ)
     EnviarMensaje(flores,rJ)
   fin
   proceso mandarId
   comenzar
-    EnviarMensaje(1,a3)
+    EnviarMensaje(1,a1)
     EnviarMensaje(2,a2)
     EnviarMensaje(3,a3)
     EnviarMensaje(4,v1)
@@ -73,7 +73,7 @@ robots
     RecibirMensaje(id,rJ)
     derecha
     ca:=PosCa
-    repetir 9
+    repetir 10
       laterales(ca)
       EnviarMensaje(id,a3)
       EnviarMensaje(V,a3)
@@ -87,10 +87,11 @@ robots
     RecibirMensaje(id,rJ)
     izquierda
     ca:=PosCa
-    repetir 9
+    repetir 10
       laterales(ca)
       EnviarMensaje(id,v3)
       EnviarMensaje(V,v3)
+      RecibirMensaje(sigo,v3)
   fin
   robot centralA
   variables
@@ -100,7 +101,7 @@ robots
     derecha
     RecibirMensaje(id,rJ)
     flores:=0
-    repetir 9
+    repetir 10
       repetir 2
         RecibirMensaje(id,*)
         si(id=1)
@@ -121,7 +122,7 @@ robots
     izquierda
     RecibirMensaje(id,rJ)
     flores:=0
-    repetir 9
+    repetir 10
       repetir 2
         RecibirMensaje(id,*)
         si(id=4)
@@ -142,17 +143,17 @@ robots
     max:=0
     repetir 2
       RecibirMensaje(r,*)
-      si(r=1)
-        RecibirMensaje(flores,r1)
+      si(r=3)
+        RecibirMensaje(flores,a3)
       sino
-        RecibirMensaje(flores,r2)
-      si(flores>=max)
+        RecibirMensaje(flores,v3)
+      si(max<=flores)
         max:=flores
         rMax:=r
-    si(r=3)
-      Informar("El equipo que primero llego fue el ",1)
+    si(rMax=3)
+      Informar("El equipo que mas flores junto fue el ",1)
     sino
-      Informar("El equipo que primero llego fue el ",2)
+      Informar("El equipo que mas flores junto fue el ",2)
     si(r=3)
       Informar("El equipo que primero llego fue el ",2)
     sino
@@ -186,7 +187,7 @@ comenzar
   Iniciar(v2,31,21)
   Iniciar(rJ,20,18)
 fin
-{Dos equipos de tres robots cada uno deben juntar todas las flores de un área asignada y llevarlas a la esquina (20.20) Cada robot, dentro de su área, recorre una 
+{Dos equipos de tres robots cada uno deben juntar todas las flores de un área asignada y llevarlas a la esquina (20.20) Cada robot, dentro de su área, recorre una
 calle asignada. En cada equipo hay dos robots "laterales" que recolectan las flores de su calle, depositandolas en la calle central del area (en la misma avenida 
 donde las junta). El tercer robot del equipo debe recorrer la calle central recolectando tanto las flores que ya habla en la calle como las depositadas por sus dos
 compañeros. El robot central es el encargado de depositar todas las flores recolectadas en (20,20). Un robot fiscalizador debe indicar que equipo finalizó primero
