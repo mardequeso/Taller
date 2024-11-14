@@ -1,0 +1,195 @@
+programa concurrencia2022
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso dejarFlores(E ca:numero;E flores:numero)
+  variables
+    av:numero
+  comenzar
+    av:=PosAv
+    BloquearEsquina(av,20)
+    Pos(av,20)
+    repetir flores
+      depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(av,ca)
+  fin
+  proceso laterales(E ca:numero)
+  variables
+    flores:numero
+  comenzar
+    mover
+    flores:=0
+    juntarFlores(flores)
+    dejarFlores(ca,flores)
+  fin
+  proceso floresCentro(E id:numero;E flores:numero)
+  variables
+    av:numero
+  comenzar
+    av:=PosAv
+    BloquearEsquina(20,20)
+    Pos(20,20)
+    repetir flores
+      depositarFlor
+    Pos(av,20)
+    LiberarEsquina(av,20)
+    EnviarMensaje(id,rJ)
+    EnviarMensaje(flores,rJ)
+  fin
+  proceso mandarId
+  comenzar
+    EnviarMensaje(1,a3)
+    EnviarMensaje(2,a2)
+    EnviarMensaje(3,a3)
+    EnviarMensaje(4,v1)
+    EnviarMensaje(5,v2)
+    EnviarMensaje(6,v3)
+  fin
+areas
+  areaA1:AreaP(9,19,19,19)
+  areaA2:AreaP(9,21,19,21)
+  areaA3:AreaPC(9,20,19,20)
+  areaV1:AreaP(21,19,31,19)
+  areaV2:AreaP(21,21,31,21)
+  areaV3:AreaPC(21,20,31,20)
+  areaJ:AreaP(20,18,20,18)
+  centro:AreaPC(20,20,20,20)
+robots
+  robot lateralA
+  variables
+    ca,id:numero
+    sigo:boolean
+  comenzar
+    RecibirMensaje(id,rJ)
+    derecha
+    ca:=PosCa
+    repetir 9
+      laterales(ca)
+      EnviarMensaje(id,a3)
+      EnviarMensaje(V,a3)
+      RecibirMensaje(sigo,a3)
+  fin
+  robot lateralV
+  variables
+    ca,id:numero
+    sigo:boolean
+  comenzar
+    RecibirMensaje(id,rJ)
+    izquierda
+    ca:=PosCa
+    repetir 9
+      laterales(ca)
+      EnviarMensaje(id,v3)
+      EnviarMensaje(V,v3)
+  fin
+  robot centralA
+  variables
+    flores,id:numero
+    termino:boolean
+  comenzar
+    derecha
+    RecibirMensaje(id,rJ)
+    flores:=0
+    repetir 9
+      repetir 2
+        RecibirMensaje(id,*)
+        si(id=1)
+          RecibirMensaje(termino,a1)
+        sino
+          RecibirMensaje(termino,a2)
+      mover
+      juntarFlores(flores)
+      EnviarMensaje(V,a1)
+      EnviarMensaje(V,a2)
+    floresCentro(id,flores)
+  fin
+  robot centralV
+  variables
+    flores,id:numero
+    termino:boolean
+  comenzar
+    izquierda
+    RecibirMensaje(id,rJ)
+    flores:=0
+    repetir 9
+      repetir 2
+        RecibirMensaje(id,*)
+        si(id=4)
+          RecibirMensaje(termino,v1)
+        sino
+          RecibirMensaje(termino,v2)
+      mover
+      juntarFlores(flores)
+      EnviarMensaje(V,v1)
+      EnviarMensaje(V,v2)
+    floresCentro(id,flores)
+  fin
+  robot jefe
+  variables
+    r,flores,rMax,max:numero
+  comenzar
+    mandarId
+    max:=0
+    repetir 2
+      RecibirMensaje(r,*)
+      si(r=1)
+        RecibirMensaje(flores,r1)
+      sino
+        RecibirMensaje(flores,r2)
+      si(flores>=max)
+        max:=flores
+        rMax:=r
+    si(r=3)
+      Informar("El equipo que primero llego fue el ",1)
+    sino
+      Informar("El equipo que primero llego fue el ",2)
+    si(r=3)
+      Informar("El equipo que primero llego fue el ",2)
+    sino
+      Informar("El equipo que primero llego fue el ",1)
+  fin
+variables
+  a1,a2:lateralA
+  a3:centralA
+  v1,v2:lateralV
+  v3:centralV
+  rJ:jefe
+comenzar
+  AsignarArea(a1,areaA1)
+  AsignarArea(a1,areaA3)
+  AsignarArea(a2,areaA2)
+  AsignarArea(a2,areaA3)
+  AsignarArea(a3,areaA3)
+  AsignarArea(a3,centro)
+  AsignarArea(v1,areaV1)
+  AsignarArea(v1,areaV3)
+  AsignarArea(v2,areaV2)
+  AsignarArea(v2,areaV3)
+  AsignarArea(v3,areaV3)
+  AsignarArea(v3,centro)
+  AsignarArea(rJ,areaJ)
+  Iniciar(a1,9,19)
+  Iniciar(a3,9,20)
+  Iniciar(a2,9,21)
+  Iniciar(v1,31,19)
+  Iniciar(v3,31,20)
+  Iniciar(v2,31,21)
+  Iniciar(rJ,20,18)
+fin
+{Dos equipos de tres robots cada uno deben juntar todas las flores de un área asignada y llevarlas a la esquina (20.20) Cada robot, dentro de su área, recorre una 
+calle asignada. En cada equipo hay dos robots "laterales" que recolectan las flores de su calle, depositandolas en la calle central del area (en la misma avenida 
+donde las junta). El tercer robot del equipo debe recorrer la calle central recolectando tanto las flores que ya habla en la calle como las depositadas por sus dos
+compañeros. El robot central es el encargado de depositar todas las flores recolectadas en (20,20). Un robot fiscalizador debe indicar que equipo finalizó primero
+y cual recolectó más flores Los robots del equipo azul (los de la izquierda) comienzan en (9,19), (9,20) y (9,21). Los robots del equipo verde (los de la derecha)
+comienzan en (31,19), (31,20) y (31,21). El fiscalizador se encuentra en (20,18). Los robots del equipo azul hacen el recorrido desde la avenida 10 hasta la 19. 
+Los robots del equipo verde hacen el recorrido desde la avenida 30 hasta la avenida 21. recolectar todas las flores de su área. Se debe maximizar la concurrencia.
